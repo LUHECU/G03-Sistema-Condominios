@@ -1,0 +1,36 @@
+﻿@model List<DataModels.Servicio>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Gestionar Servicios</h2>
+
+<table class="table table-bordered table-bordered table-striped">
+
+    <tr>
+        <th>Id Servicio</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Id Categoría</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    @*Se hace un foreach para que podamos indicar nada mas una vez los rows y estos se vayan repitiendo automaticamente*@
+    @{
+        foreach (var es in Model)
+        {
+            <tr>
+                <td>@es.IdServicio</td>
+                <td>@es.Nombre</td>
+                <td>@es.Descripcion</td>
+                <td>@es.Precio</td>
+                <td>@es.IdCategoria</td>
+                <td>@es.Estado</td>
+                <td></td>
+            </tr>
+        }
+    }
+</table>
+

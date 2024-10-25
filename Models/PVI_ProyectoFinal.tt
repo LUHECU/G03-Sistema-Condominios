@@ -1,6 +1,6 @@
 <#@ template language="C#" debug="True" hostSpecific="True"                    #>
 <#@ CleanupBehavior processor="T4VSHost" CleanupAfterProcessingtemplate="true" #>
-<#@ output extension=".generated.cs"                                           #>
+<#@ output extension=".generated.cs"                                          #>
 
 <#@ include file="$(LinqToDBT4SqlServerTemplatesPath)LinqToDB.SqlServer.Tools.ttinclude" once="true" #>
 <#@ include file="$(LinqToDBT4SqlServerTemplatesPath)PluralizationService.ttinclude"     once="true" #>
@@ -116,7 +116,7 @@
 
 	// to configure GetSchemaOptions properties, add them here, before load metadata call
 
-	LoadSqlServerMetadata("", "PVI_ProyectoFinal");
+	LoadSqlServerMetadata("Camila", "PVI_ProyectoFinal"); 
 //	LoadSqlServerMetadata(".", "MyDatabase"); // Integrated Security
 //	LoadSqlServerMetadata(string connectionString);
 

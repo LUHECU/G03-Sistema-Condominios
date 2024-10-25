@@ -1,0 +1,37 @@
+﻿@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCasasResult>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Gestionar Casas</h2>
+
+<table class="table table-bordered table-bordered table-striped">
+
+    <tr>
+        <th>Nombre de la Casa</th>
+        <th>Mts. Cuadrados</th>
+        <th>Núm. Habitaciones</th>
+        <th>Núm. Baños</th>
+        <th># Propietario</th>
+        <th>Fecha Construcción</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    @*Se hace un foreach para que podamos indicar nada mas una vez los rows y estos se vayan repitiendo automaticamente*@
+    @{
+        foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCasasResult es in this.Model)
+        {
+        <tr> 
+            <td>@es.Nombre_casa</td>
+            <td>@es.Metros_cuadrados</td>
+            <td>@es.Numero_habitaciones</td>
+            <td>@es.Numero_banos</td>
+            <td>@es.Propietario</td>
+            <td>@es.Fecha_construccion</td>
+            <td>@es.Estado</td>
+            <td></td>
+        </tr>
+        }
+    }
+</table>
