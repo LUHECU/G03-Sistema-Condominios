@@ -30,6 +30,7 @@ namespace G03_Sistema_Condominios.Controllers
             return View();
         }
 
+        [HttpPost]
         public ActionResult CrearCasa(G03_Sistema_Condominios.Models.ModelCasa casa)
         {
             try
