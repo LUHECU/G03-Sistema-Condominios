@@ -21,15 +21,15 @@
     @{
         foreach (var es in Model)
         {
-            <tr>
-                <td>@es.IdServicio</td>
-                <td>@es.Nombre</td>
-                <td>@es.Descripcion</td>
-                <td>@es.Precio</td>
-                <td>@es.IdCategoria</td>
-                <td>@es.Estado</td>
-                <td></td>
-            </tr>
+        <tr>
+            <td>@es.IdServicio</td>
+            <td>@es.Nombre</td>
+            <td>@es.Descripcion</td>
+            <td>@es.Precio</td>
+            <td>@es.IdCategoria</td>
+            <td>@es.Estado</td> @*Recordar cambiar el estado a Activo/Inactivo*@
+            <td></td>
+        </tr>
         }
     }
 </table>

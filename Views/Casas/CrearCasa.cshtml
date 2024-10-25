@@ -1,0 +1,42 @@
+﻿@model G03_Sistema_Condominios.Models.ModelCasa
+@{
+    ViewBag.Title = "CrearCasa";
+}
+
+<h2>Crear Casas</h2>
+
+<form method="post" id="myform">
+
+    @*@Html.HiddenFor(model => model.Id)*@
+    <div class="mb-3">
+        <label class="form-label">Nombre de la Casa: </label>
+        @Html.TextBoxFor(model => model.NombreCasa, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Metros Cuadrados: </label>
+        @Html.TextBoxFor(model => model.MetrosCuadrados, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Numero de Habitaciones: </label>
+        @Html.TextBoxFor(model => model.NumeroHabitaciones, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Numero de Baños: </label>
+        @Html.TextBoxFor(model => model.NumeroBanos, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Cliente: </label>
+        @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "IdPersona", "Nombre"), "Seleccione un cliente:", new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha de Construcción: </label>
+        @Html.TextBoxFor(model => model.FechaConstruccion, new { @class = "form-control", @type="date" })
+    </div>
+
+
+</form>

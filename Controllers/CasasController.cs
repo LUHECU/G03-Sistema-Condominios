@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using G03_Sistema_Condominios.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,30 @@ namespace G03_Sistema_Condominios.Controllers
             }
             //pasamos la lista a la vista
             return View(list);
+        }
+
+        public ActionResult CrearCasa()
+        {
+
+            return View();
+        }
+
+        public ActionResult CrearCasa(G03_Sistema_Condominios.Models.ModelCasa casa)
+        {
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDataBase"))
+                {
+                    db.SpCreaCasa(casa.NombreCasa,casa.MetrosCuadrados,casa.NumeroHabitaciones,casa.NumeroBanos,casa.Precion,casa.IdPersona,casa.FechaConstruccion,casa.Estado);
+                    ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
+                }
+            }
+            catch
+            {
+
+            }
+
+            return View();
         }
     }
 }

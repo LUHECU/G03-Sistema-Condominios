@@ -5,6 +5,10 @@
 
 <h2>Gestionar Casas</h2>
 
+<br />
+@Html.ActionLink("Crear Casa", "CrearCasa", null, new { @class = "btn btn-primary" })
+<br />
+
 <table class="table table-bordered table-bordered table-striped">
 
     <tr>
@@ -22,16 +26,16 @@
     @{
         foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCasasResult es in this.Model)
         {
-        <tr> 
-            <td>@es.Nombre_casa</td>
-            <td>@es.Metros_cuadrados</td>
-            <td>@es.Numero_habitaciones</td>
-            <td>@es.Numero_banos</td>
-            <td>@es.Propietario</td>
-            <td>@es.Fecha_construccion</td>
-            <td>@es.Estado</td>
-            <td></td>
-        </tr>
+            <tr>
+                <td>@es.Nombre_casa</td>
+                <td>@es.Metros_cuadrados</td>
+                <td>@es.Numero_habitaciones</td>
+                <td>@es.Numero_banos</td>
+                <td>@es.Propietario</td>
+                <td>@es.Fecha_construccion.ToString("dd/MM/yyyy")</td>
+                <td>@es.Estado</td> @*Recordar cambiar el estado a Activo/Inactivo*@
+                <td></td>
+            </tr>
         }
     }
 </table>

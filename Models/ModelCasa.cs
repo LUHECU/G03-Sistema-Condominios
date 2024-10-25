@@ -11,10 +11,11 @@ namespace G03_Sistema_Condominios.Models
         public string NombreCasa { get; set; }
         public int MetrosCuadrados { get; set; }
         public int NumeroHabitaciones { get; set; }
-        public int NumeroBanos { get; set; }    
-        public decimal Precion {  get; set; }
-        public int IdPersona { get; set; }  
+        public int NumeroBanos { get; set; }
+        public decimal Precion { get; set; }
+        public int IdPersona { get; set; }
         public DateTime FechaConstruccion { get; set; }
-        public bool Estado {  get; set; }   
+        public bool Estado { get; set; }
+
     }
 }
