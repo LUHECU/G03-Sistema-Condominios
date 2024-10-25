@@ -38,6 +38,7 @@ namespace G03_Sistema_Condominios.Controllers
                 using (var db = new PviProyectoFinalDB("MyDataBase"))
                 {
                     db.SpCreaCasa(casa.NombreCasa,casa.MetrosCuadrados,casa.NumeroHabitaciones,casa.NumeroBanos,casa.Precion,casa.IdPersona,casa.FechaConstruccion,casa.Estado);
+                    //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
                     ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
                 }
             }
