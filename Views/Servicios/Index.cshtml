@@ -5,6 +5,10 @@
 
 <h2>Gestionar Servicios</h2>
 
+<br />
+@Html.ActionLink("Crear Servicio", "CrearServicio", null, new { @class = "btn btn-primary" })
+<br />
+
 <table class="table table-bordered table-bordered table-striped">
 
     <tr>
@@ -21,15 +25,15 @@
     @{
         foreach (var es in Model)
         {
-        <tr>
-            <td>@es.IdServicio</td>
-            <td>@es.Nombre</td>
-            <td>@es.Descripcion</td>
-            <td>@es.Precio</td>
-            <td>@es.IdCategoria</td>
-            <td>@es.Estado</td> @*Recordar cambiar el estado a Activo/Inactivo*@
-            <td></td>
-        </tr>
+            <tr>
+                <td>@es.IdServicio</td>
+                <td>@es.Nombre</td>
+                <td>@es.Descripcion</td>
+                <td>@es.Precio</td>
+                <td>@es.IdCategoria</td>
+                <td>@es.Estado</td> @*Recordar cambiar el estado a Activo/Inactivo*@
+                <td></td>
+            </tr>
         }
     }
 </table>

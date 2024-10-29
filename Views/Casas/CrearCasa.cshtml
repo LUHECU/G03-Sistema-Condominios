@@ -35,8 +35,10 @@
 
     <div class="mb-3">
         <label class="form-label">Fecha de Construcción: </label>
-        @Html.TextBoxFor(model => model.FechaConstruccion, new { @class = "form-control", @type="date" })
+        @Html.TextBoxFor(model => model.FechaConstruccion, new { @class = "form-control", @type = "date" })
     </div>
 
+    <input type="submit" class="btn btn-primary" value="Guardar" />
+    <a href="/Casas/Index" class="btn btn-secondary">Regresar</a>
 
 </form>

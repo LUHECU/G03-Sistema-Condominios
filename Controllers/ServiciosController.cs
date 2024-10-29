@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using G03_Sistema_Condominios.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,17 @@ namespace G03_Sistema_Condominios.Controllers
             //pasamos la lista a la vista
 
             return View(list);
+        }
+
+        public ActionResult CrearServicio()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CrearServicio(ModelServicio servicio)
+        {
+            return View();
         }
     }
 }

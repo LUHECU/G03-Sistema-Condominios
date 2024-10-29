@@ -1,0 +1,33 @@
+﻿@model G03_Sistema_Condominios.Models.ModelServicio
+@{
+    ViewBag.Title = "CrearServicio";
+}
+
+<h2>CrearServicio</h2>
+
+<form method="post" id="myform">
+
+    @*@Html.HiddenFor(model => model.Id)*@
+    <div class="mb-3">
+        <label class="form-label">Nombre del Servicio: </label>
+        @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Descripción: </label>
+        @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Precio: </label>
+        @Html.TextBoxFor(model => model.Precio, new { @class = "form-control" })
+    </div>
+
+    @*<div class="mb-3">
+            <label class="form-label">Cliente: </label>
+            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "IdCategoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control" })
+        </div>*@
+    <input type="submit" class="btn btn-primary" value="Guardar" />
+    <a href="/Servicios/Index" class="btn btn-secondary">Regresar</a>
+
+</form>
