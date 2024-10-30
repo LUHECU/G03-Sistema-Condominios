@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using static DataModels.PviProyectoFinalDBStoredProcedures;
 
 namespace G03_Sistema_Condominios.Controllers
@@ -27,6 +28,11 @@ namespace G03_Sistema_Condominios.Controllers
 
         public ActionResult CrearServicio()
         {
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+                
+            }
             return View();
         }
 

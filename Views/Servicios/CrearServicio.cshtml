@@ -23,11 +23,14 @@
         @Html.TextBoxFor(model => model.Precio, new { @class = "form-control" })
     </div>
 
-    @*<div class="mb-3">
+    <div class="mb-3">
             <label class="form-label">Cliente: </label>
-            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "IdCategoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control" })
-        </div>*@
+            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control" })
+        </div>
+
     <input type="submit" class="btn btn-primary" value="Guardar" />
     <a href="/Servicios/Index" class="btn btn-secondary">Regresar</a>
 
 </form>
+
+@ViewBag.resultado
