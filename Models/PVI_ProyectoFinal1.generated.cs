@@ -309,6 +309,21 @@ namespace DataModels
 
 		#endregion
 
+		#region SpConsultarCategoriasServicios
+
+		public static IEnumerable<SpConsultarCategoriasServiciosResult> SpConsultarCategoriasServicios(this PviProyectoFinalDB dataConnection)
+		{
+			return dataConnection.QueryProc<SpConsultarCategoriasServiciosResult>("[dbo].[spConsultarCategoriasServicios]");
+		}
+
+		public partial class SpConsultarCategoriasServiciosResult
+		{
+			[Column("id_categoria")] public int    Id_categoria { get; set; }
+			[Column("nombre")      ] public string Nombre       { get; set; }
+		}
+
+		#endregion
+
 		#region SpConsultarClientesActivos
 
 		public static IEnumerable<SpConsultarClientesActivosResult> SpConsultarClientesActivos(this PviProyectoFinalDB dataConnection)
