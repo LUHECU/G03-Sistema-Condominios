@@ -3,7 +3,15 @@
     ViewBag.Title = "CrearServicio";
 }
 
-<h2>CrearServicio</h2>
+@if (this.Model == null)
+{
+    <h2>Crear Servicio</h2>
+}
+else
+{
+    <h2>Modificar Servicio</h2>
+}
+
 
 <form method="post" id="myform">
 
@@ -29,7 +37,12 @@
     </div>
 
     <input type="submit" class="btn btn-primary" value="Guardar" />
-    @*<input type="submit" class="btn btn-danger" value="Inactivar" />*@
+
+    @if (this.Model != null && this.Model.IdServicio != 0)
+    {
+        @Html.ActionLink("Inactivar", "InactivarServicio", "Servicios", new { id = Model.IdServicio }, new { @class = "btn btn-danger" })
+    }
+
     <a href="/Servicios/Index" class="btn btn-secondary">Regresar</a>
 
 </form>
@@ -45,11 +58,11 @@
         $("#myform").validate({
             rules:
             {
-                'Nombre': { required: true, alphanumeric: true ,minlenght: 1, maxlenght:250 },
-                'Descripcion': { required: true, alphanumeric: true ,maxlenght: 250 },
+                'Nombre': { required: true, alphanumeric: true, minlenght: 1, maxlenght: 250 },
+                'Descripcion': { required: true, alphanumeric: true, maxlenght: 250 },
                 'Precio': { required: true, number: true, min: 1, step: 0.01 },
                 'IdCategoria': { required: true },
             }
         });
-        </script>
-    }
+    </script>
+}

@@ -43,13 +43,19 @@ namespace G03_Sistema_Condominios.Controllers
 
             try
             {
-                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                if (servicio.IdServicio ==0)
                 {
-                    db.SpCreaServicios(servicio.Nombre,servicio.Descripcion,servicio.Precio,servicio.IdCategoria);
+                    using (var db = new PviProyectoFinalDB("MyDatabase"))
+                    {
+                        db.SpCreaServicios(servicio.Nombre, servicio.Descripcion, servicio.Precio, servicio.IdCategoria);
 
-                    ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+                        ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
 
-                    resultado = "Se ha guardado exitosamente";
+                        resultado = "Se ha guardado exitosamente";
+                    }
+                }else
+                {
+
                 }
 
             }
@@ -58,6 +64,15 @@ namespace G03_Sistema_Condominios.Controllers
                 resultado = "No se ha guardado exitosamente";
             }
 
+            return View();
+        }
+
+        public ActionResult InactivarServicio(int? idServicio)
+        {
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                db.SpInactivarServicio(idServicio);
+            }
             return View();
         }
     }
