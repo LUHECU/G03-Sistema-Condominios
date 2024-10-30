@@ -33,6 +33,25 @@ namespace G03_Sistema_Condominios.Controllers
         [HttpPost]
         public ActionResult CrearServicio(ModelServicio servicio)
         {
+            var resultado = string.Empty;
+
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    db.SpCreaServicios(servicio.Nombre,servicio.Descripcion,servicio.Precio,servicio.IdCategoria);
+
+                    ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+
+                    resultado = "Se ha guardado exitosamente";
+                }
+
+            }
+            catch
+            {
+                resultado = "No se ha guardado exitosamente";
+            }
+
             return View();
         }
     }

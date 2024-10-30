@@ -421,7 +421,7 @@ namespace DataModels
 
 		#region SpCreaServicios
 
-		public static int SpCreaServicios(this PviProyectoFinalDB dataConnection, string @Nombre, string @Descripcion, decimal? @Precio, int? @IdCategoria, bool? @Estado)
+		public static int SpCreaServicios(this PviProyectoFinalDB dataConnection, string @Nombre, string @Descripcion, decimal? @Precio, int? @IdCategoria)
 		{
 			var parameters = new []
 			{
@@ -434,8 +434,7 @@ namespace DataModels
 					Size = 2147483647
 				},
 				new DataParameter("@Precio",       @Precio,      LinqToDB.DataType.Decimal),
-				new DataParameter("@Id_Categoria", @IdCategoria, LinqToDB.DataType.Int32),
-				new DataParameter("@Estado",       @Estado,      LinqToDB.DataType.Boolean)
+				new DataParameter("@Id_Categoria", @IdCategoria, LinqToDB.DataType.Int32)
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[SpCreaServicios]", parameters);
