@@ -7,7 +7,7 @@
 
 <form method="post" id="myform">
 
-    @*@Html.HiddenFor(model => model.Id)*@
+    @Html.HiddenFor(model => model.IdServicio)
     <div class="mb-3">
         <label class="form-label">Nombre del Servicio: </label>
         @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
@@ -24,13 +24,32 @@
     </div>
 
     <div class="mb-3">
-            <label class="form-label">Cliente: </label>
-            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control" })
-        </div>
+        <label class="form-label">Cliente: </label>
+        @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control" })
+    </div>
 
     <input type="submit" class="btn btn-primary" value="Guardar" />
+    @*<input type="submit" class="btn btn-danger" value="Inactivar" />*@
     <a href="/Servicios/Index" class="btn btn-secondary">Regresar</a>
 
 </form>
 
 @ViewBag.resultado
+
+@*Llamamos al jquery validation solo para esta pagina porque solo sirve en forms*@
+@section Scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval") @*esta validación va a indicarle al usuario que cada campo es obligatorio*@
+    <script src="~/Scripts/validacionesGenericas.js"></script> @*esto le da estilos a los mensajes de las validaciones*@
+    <script type="text/javascript">
+        $("#myform").validate({
+            rules:
+            {
+                'Nombre': { required: true, alphanumeric: true ,minlenght: 1, maxlenght:250 },
+                'Descripcion': { required: true, alphanumeric: true ,maxlenght: 250 },
+                'Precio': { required: true, number: true, min: 1, step: 0.01 },
+                'IdCategoria': { required: true },
+            }
+        });
+        </script>
+    }
