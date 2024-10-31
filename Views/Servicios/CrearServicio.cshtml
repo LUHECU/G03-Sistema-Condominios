@@ -58,8 +58,8 @@ else
         $("#myform").validate({
             rules:
             {
-                'Nombre': { required: true, alphanumeric: true, minlenght: 1, maxlenght: 250 },
-                'Descripcion': { required: true, alphanumeric: true, maxlenght: 250 },
+                'Nombre': { required: true, alphanumeric: true, minlength: 1, maxlength: 250 },
+                'Descripcion': { required: true, alphanumeric: true, maxlength: 250 },
                 'Precio': { required: true, number: true, min: 1, step: 0.01 },
                 'IdCategoria': { required: true },
             }
