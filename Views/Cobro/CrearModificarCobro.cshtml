@@ -1,0 +1,98 @@
+﻿@model G03_Sistema_Condominios.Models.ModelCobro
+
+@{
+    ViewBag.Title = "CrearModificarCobro";
+}
+
+
+
+
+<div class="mt-4">
+
+    <form method="post" id="FormCobro">
+
+        <div class="mb-3">
+            <label class="form-label" for="IdCliente">Cliente</label>
+            <select id="IdProvincia" name="IdProvincia" class="form-control">
+                <option value="">Seleccione una opción</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="IdCasa">Casa</label>
+            <select id="IdCasa" name="IdCasa" class="form-control">
+                <option value="">Seleccione una opción</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="Anno">Año</label>
+            <select id="Anno" name="Anno" class="form-control">
+                <option value="">Seleccione una opción</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="Mes">Año</label>
+            <select id="Mes" name="Mes" class="form-control">
+                <option value="">Seleccione una opción</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="Servicios">Servicios</label>
+
+            @{
+                if (ViewBag.servicios != null && ViewBag.servicios.count > 0)
+                {
+                    foreach (var servicio in ViewBag.servicios)
+                    {
+                        //if (servicio.Estado)
+                        //{
+                        <input type="checkbox" id="@servicio.IdServicio" name="@servicio.IdServicio" value="@servicio.Nombre" />
+                        <label for="@servicio.IdServicio">@servicio.NombreCategoria : @servicio.Nombre</label>
+
+
+
+                        //}
+
+                    }
+
+                }
+                
+
+            }
+
+        </div>
+
+        <div>
+            <input type="submit" class="btn btn-primary" value="Guardar" />
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/validacionesGenericas.js"></script>
+    <script type="text/javascript">
+        $("#FormCobro").validate({
+            rules: {
+                'IdProvincia': {
+                    required: true
+                },
+                'IdCasa': {
+                    required: true
+                },
+                'Anno': {
+                    required: true
+                },
+                'Mes': {
+                    required: true
+                }
+            }
+        });
+    </script>
+}
