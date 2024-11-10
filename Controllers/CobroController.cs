@@ -38,18 +38,18 @@ namespace G03_Sistema_Condominios.Controllers
 
             try 
             {
-                using(var db = new PviProyectoFinalDB("MyDatabse"))
+                using(var db = new PviProyectoFinalDB("MyDatabase"))
                 {
 
-                    ViewBag.servicios = db.SpConsultarServicios().ToList();
-
-
+                    servicios = db.SpConsultarServicios().ToList();
+                    cobroView.Servicios = servicios;
+                    cobroView.Cobro = cobro;
 
                 }
             }
             catch { }
 
-            return View();
+            return View(cobroView);
         }
 
         //[HttpPost]
@@ -58,7 +58,7 @@ namespace G03_Sistema_Condominios.Controllers
 
         //    try
         //    {
-        //        using (var db = new PviProyectoFinalDB("MyDatabse"))
+        //        using (var db = new PviProyectoFinalDB("MyDatabase"))
         //        {
         //            if (cobro.IdCobro == 0)
         //            {
@@ -74,6 +74,46 @@ namespace G03_Sistema_Condominios.Controllers
 
         //    return View();
         //}
+
+
+        public JsonResult Clientes()
+        {
+            var list = new List<Dropdown>();
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    list = db.SpConsultarClientesActivos().Select(_ => new Dropdown 
+                    {
+                        Id = _.Id_persona,
+                        Nombre = _.Cliente
+                    }).ToList();
+                }
+            }
+            catch{ }
+
+            return Json(list);
+        }
+
+        public JsonResult Casas(int? idCliente)
+        {
+            var list = new List<Dropdown>();
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    list = db.SpConsultarCasasActivasPorCliente(idCliente).Select(_ => new Dropdown
+                    {
+                        Id = _.Id_casa,
+                        Nombre = _.Nombre_casa
+                    }).ToList();
+                }
+            }
+            catch { }
+
+            return Json(list);
+        }
+
 
     }
 }

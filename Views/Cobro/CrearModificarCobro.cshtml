@@ -1,4 +1,4 @@
-﻿@model G03_Sistema_Condominios.Models.ModelCobro
+﻿@model G03_Sistema_Condominios.Models.ModelCobroView
 
 @{
     ViewBag.Title = "CrearModificarCobro";
@@ -13,7 +13,7 @@
 
         <div class="mb-3">
             <label class="form-label" for="IdCliente">Cliente</label>
-            <select id="IdProvincia" name="IdProvincia" class="form-control">
+            <select id="IdCliente" name="IdCliente" class="form-control">
                 <option value="">Seleccione una opción</option>
             </select>
         </div>
@@ -43,24 +43,18 @@
             <label class="form-label" for="Servicios">Servicios</label>
 
             @{
-                if (ViewBag.servicios != null && ViewBag.servicios.count > 0)
+                foreach (var servicio in this.Model.Servicios)
                 {
-                    foreach (var servicio in ViewBag.servicios)
+                    if (servicio.Estado)
                     {
-                        //if (servicio.Estado)
-                        //{
-                        <input type="checkbox" id="@servicio.IdServicio" name="@servicio.IdServicio" value="@servicio.Nombre" />
-                        <label for="@servicio.IdServicio">@servicio.NombreCategoria : @servicio.Nombre</label>
-
-
-
-                        //}
-
+                        <div>
+                            <input type="checkbox" id="@servicio.Id_servicio" name="@servicio.Id_servicio" value="@servicio.Nombre" />
+                            <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
+                        </div>
+                        
                     }
 
                 }
-                
-
             }
 
         </div>
@@ -80,7 +74,7 @@
     <script type="text/javascript">
         $("#FormCobro").validate({
             rules: {
-                'IdProvincia': {
+                'IdCliente': {
                     required: true
                 },
                 'IdCasa': {

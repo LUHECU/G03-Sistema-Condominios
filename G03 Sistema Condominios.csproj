@@ -261,9 +261,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Dropdown.cs" />
     <Compile Include="Models\ModelCobro.cs" />
     <Compile Include="Models\ModelCobroView.cs" />
-    <Compile Include="Models\ModelServicio.cs" />
     <Compile Include="Models\PVI_ProyectoFinal1.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
