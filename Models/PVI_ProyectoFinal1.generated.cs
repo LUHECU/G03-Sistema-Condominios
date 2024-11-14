@@ -108,6 +108,12 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
+		/// fk_id_casa_BackReference (dbo.Cobros)
+		/// </summary>
+		[Association(ThisKey="IdCasa", OtherKey="IdCasa", CanBeNull=true)]
+		public IEnumerable<Cobro> Fkidcasas { get; set; }
+
+		/// <summary>
 		/// fk_id_persona (dbo.Persona)
 		/// </summary>
 		[Association(ThisKey="IdPersona", OtherKey="IdPersona", CanBeNull=false)]
@@ -147,6 +153,12 @@ namespace DataModels
 		[Column("fecha_pagada"),    Nullable          ] public DateTime? FechaPagada { get; set; } // date
 
 		#region Associations
+
+		/// <summary>
+		/// fk_id_casa (dbo.Casas)
+		/// </summary>
+		[Association(ThisKey="IdCasa", OtherKey="IdCasa", CanBeNull=false)]
+		public Casa Fkidcasa { get; set; }
 
 		/// <summary>
 		/// fk_id_cobro_Bitacora_BackReference (dbo.Bitacora)
@@ -246,6 +258,29 @@ namespace DataModels
 
 	public static partial class PviProyectoFinalDBStoredProcedures
 	{
+		#region SpAlterdiagram
+
+		public static int SpAlterdiagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId, int? @version, byte[] @definition)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@diagramname", @diagramname, LinqToDB.DataType.NVarChar)
+				{
+					Size = 128
+				},
+				new DataParameter("@owner_id",    @ownerId,     LinqToDB.DataType.Int32),
+				new DataParameter("@version",     @version,     LinqToDB.DataType.Int32),
+				new DataParameter("@definition",  @definition,  LinqToDB.DataType.VarBinary)
+				{
+					Size = -1
+				}
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[sp_alterdiagram]", parameters);
+		}
+
+		#endregion
+
 		#region SpConsultarBitacora
 
 		public static IEnumerable<SpConsultarBitacoraResult> SpConsultarBitacora(this PviProyectoFinalDB dataConnection, int? @idCobro)
@@ -395,6 +430,28 @@ namespace DataModels
 
 		#endregion
 
+		#region SpConsultarServiciosPorID
+
+		public static IEnumerable<SpConsultarServiciosPorIDResult> SpConsultarServiciosPorID(this PviProyectoFinalDB dataConnection, int? @idServicio)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_servicio", @idServicio, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpConsultarServiciosPorIDResult>("[dbo].[spConsultarServiciosPorID]", parameters);
+		}
+
+		public partial class SpConsultarServiciosPorIDResult
+		{
+			[Column("nombre")      ] public string  Nombre       { get; set; }
+			[Column("descripcion") ] public string  Descripcion  { get; set; }
+			[Column("precio")      ] public decimal Precio       { get; set; }
+			[Column("id_categoria")] public int     Id_categoria { get; set; }
+		}
+
+		#endregion
+
 		#region SpCreaCasa
 
 		public static int SpCreaCasa(this PviProyectoFinalDB dataConnection, string @NombreCasa, int? @MetrosCuadrados, int? @NumeroHabitaciones, int? @NumeroBanos, decimal? @Precio, int? @idPersona, DateTime? @Fecha, bool? @Estado)
@@ -442,6 +499,47 @@ namespace DataModels
 
 		#endregion
 
+		#region SpCreatediagram
+
+		public static int SpCreatediagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId, int? @version, byte[] @definition)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@diagramname", @diagramname, LinqToDB.DataType.NVarChar)
+				{
+					Size = 128
+				},
+				new DataParameter("@owner_id",    @ownerId,     LinqToDB.DataType.Int32),
+				new DataParameter("@version",     @version,     LinqToDB.DataType.Int32),
+				new DataParameter("@definition",  @definition,  LinqToDB.DataType.VarBinary)
+				{
+					Size = -1
+				}
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[sp_creatediagram]", parameters);
+		}
+
+		#endregion
+
+		#region SpDropdiagram
+
+		public static int SpDropdiagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@diagramname", @diagramname, LinqToDB.DataType.NVarChar)
+				{
+					Size = 128
+				},
+				new DataParameter("@owner_id",    @ownerId,     LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[sp_dropdiagram]", parameters);
+		}
+
+		#endregion
+
 		#region SpEliminarCobroMensualidades
 
 		public static int SpEliminarCobroMensualidades(this PviProyectoFinalDB dataConnection, int? @idCobro, int? @idUser)
@@ -453,6 +551,57 @@ namespace DataModels
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[spEliminarCobroMensualidades]", parameters);
+		}
+
+		#endregion
+
+		#region SpHelpdiagramdefinition
+
+		public static IEnumerable<SpHelpdiagramdefinitionResult> SpHelpdiagramdefinition(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@diagramname", @diagramname, LinqToDB.DataType.NVarChar)
+				{
+					Size = 128
+				},
+				new DataParameter("@owner_id",    @ownerId,     LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpHelpdiagramdefinitionResult>("[dbo].[sp_helpdiagramdefinition]", parameters);
+		}
+
+		public partial class SpHelpdiagramdefinitionResult
+		{
+			[Column("version")   ] public int?   Version    { get; set; }
+			[Column("definition")] public byte[] Definition { get; set; }
+		}
+
+		#endregion
+
+		#region SpHelpdiagrams
+
+		public static IEnumerable<SpHelpdiagramsResult> SpHelpdiagrams(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@diagramname", @diagramname, LinqToDB.DataType.NVarChar)
+				{
+					Size = 128
+				},
+				new DataParameter("@owner_id",    @ownerId,     LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpHelpdiagramsResult>("[dbo].[sp_helpdiagrams]", parameters);
+		}
+
+		public partial class SpHelpdiagramsResult
+		{
+			public string Database { get; set; }
+			public string Name     { get; set; }
+			public int    ID       { get; set; }
+			public string Owner    { get; set; }
+			public int    OwnerID  { get; set; }
 		}
 
 		#endregion
@@ -485,6 +634,25 @@ namespace DataModels
 
 		#endregion
 
+		#region SpModificarServicios
+
+		public static int SpModificarServicios(this PviProyectoFinalDB dataConnection, int? @idServicio, string @descripcion, decimal? @precio)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_servicio", @idServicio,  LinqToDB.DataType.Int32),
+				new DataParameter("@descripcion", @descripcion, LinqToDB.DataType.Text)
+				{
+					Size = 2147483647
+				},
+				new DataParameter("@precio",      @precio,      LinqToDB.DataType.Decimal)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[spModificarServicios]", parameters);
+		}
+
+		#endregion
+
 		#region SpPagarCobroMensualidades
 
 		public static int SpPagarCobroMensualidades(this PviProyectoFinalDB dataConnection, int? @idCobro, int? @idUser)
@@ -496,6 +664,50 @@ namespace DataModels
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[spPagarCobroMensualidades]", parameters);
+		}
+
+		#endregion
+
+		#region SpRenamediagram
+
+		public static int SpRenamediagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId, string @newDiagramname)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@diagramname",     @diagramname,    LinqToDB.DataType.NVarChar)
+				{
+					Size = 128
+				},
+				new DataParameter("@owner_id",        @ownerId,        LinqToDB.DataType.Int32),
+				new DataParameter("@new_diagramname", @newDiagramname, LinqToDB.DataType.NVarChar)
+				{
+					Size = 128
+				}
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[sp_renamediagram]", parameters);
+		}
+
+		#endregion
+
+		#region SpUpgraddiagrams
+
+		public static int SpUpgraddiagrams(this PviProyectoFinalDB dataConnection)
+		{
+			return dataConnection.ExecuteProc("[dbo].[sp_upgraddiagrams]");
+		}
+
+		#endregion
+	}
+
+	public static partial class SqlFunctions
+	{
+		#region FnDiagramobjects
+
+		[Sql.Function(Name="[dbo].[fn_diagramobjects]", ServerSideOnly=true)]
+		public static int? FnDiagramobjects()
+		{
+			throw new InvalidOperationException();
 		}
 
 		#endregion
