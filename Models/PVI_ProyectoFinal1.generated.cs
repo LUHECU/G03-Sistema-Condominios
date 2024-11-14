@@ -444,6 +444,7 @@ namespace DataModels
 
 		public partial class SpConsultarServiciosPorIDResult
 		{
+			[Column("id_servicio") ] public int     Id_servicio  { get; set; }
 			[Column("nombre")      ] public string  Nombre       { get; set; }
 			[Column("descripcion") ] public string  Descripcion  { get; set; }
 			[Column("precio")      ] public decimal Precio       { get; set; }

@@ -32,7 +32,9 @@
                 <td>@es.Precio</td>
                 <td>@es.IdCategoria</td>
                 <td>@es.Estado</td> @*Recordar cambiar el estado a Activo/Inactivo*@
-                <td></td>
+            <td>
+                @Html.ActionLink("Modificar Servicio", "CrearServicio", "Servicios", new { IdServicio = es.IdServicio }, new { @class = "btn btn-primary" })
+            </td>
             </tr>
         }
     }

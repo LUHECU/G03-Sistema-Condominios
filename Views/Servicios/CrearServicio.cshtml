@@ -40,7 +40,7 @@ else
 
     @if (this.Model != null && this.Model.IdServicio != 0)
     {
-        @Html.ActionLink("Inactivar", "InactivarServicio", "Servicios", new { id = Model.IdServicio }, new { @class = "btn btn-danger" })
+        @Html.ActionLink("Inactivar", "InactivarServicio", "Servicios", new { idServicio = Model.IdServicio }, new { @class = "btn btn-danger" })
     }
 
     <a href="/Servicios/Index" class="btn btn-secondary">Regresar</a>

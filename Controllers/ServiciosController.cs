@@ -26,14 +26,34 @@ namespace G03_Sistema_Condominios.Controllers
             return View(list);
         }
 
-        public ActionResult CrearServicio()
+        public ActionResult CrearServicio(int? idServicio)
         {
-            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            var servicio = new ModelServicio();  
+
+           try
             {
-                ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
-                
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    servicio = db.SpConsultarServiciosPorID(idServicio).Select(x => new ModelServicio
+                        {
+                        IdServicio = x.Id_servicio,
+                        Nombre = x.Nombre,
+                        Descripcion = x.Descripcion,
+                        Precio = x.Precio,
+                        IdCategoria = x.Id_categoria,
+
+                    }).FirstOrDefault();
+
+                    ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+
+                }
             }
-            return View();
+            catch
+            {
+
+            }
+
+            return View(servicio);
         }
 
         [HttpPost]
@@ -43,9 +63,9 @@ namespace G03_Sistema_Condominios.Controllers
 
             try
             {
-                if (servicio.IdServicio ==0)
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
-                    using (var db = new PviProyectoFinalDB("MyDatabase"))
+                    if (servicio.IdServicio == 0)
                     {
                         db.SpCreaServicios(servicio.Nombre, servicio.Descripcion, servicio.Precio, servicio.IdCategoria);
 
@@ -53,11 +73,13 @@ namespace G03_Sistema_Condominios.Controllers
 
                         resultado = "Se ha guardado exitosamente";
                     }
-                }else
-                {
+                    else
+                    {
+                        db.SpModificarServicios(servicio.IdServicio, servicio.Descripcion, servicio.Precio);
+                        resultado = "Se ha guardado exitosamente";
+                    }
 
                 }
-
             }
             catch
             {
@@ -73,7 +95,7 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 db.SpInactivarServicio(idServicio);
             }
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }
