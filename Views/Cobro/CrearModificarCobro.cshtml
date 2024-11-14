@@ -27,15 +27,28 @@
 
         <div class="mb-3">
             <label class="form-label" for="Anno">Año</label>
+                       
             <select id="Anno" name="Anno" class="form-control">
                 <option value="">Seleccione una opción</option>
+                @{
+                    foreach (var anno in this.Model.annos)
+                    {
+                        <option id="@anno" name="@anno" value="@anno">@anno</option>
+                    }
+                }
             </select>
         </div>
 
         <div class="mb-3">
-            <label class="form-label" for="Mes">Año</label>
+            <label class="form-label" for="Mes">Mes</label>
             <select id="Mes" name="Mes" class="form-control">
                 <option value="">Seleccione una opción</option>
+                @{
+                    foreach (var mes in this.Model.meses)
+                    {
+                        <option id="@mes" name="@mes" value="@mes">@mes</option>
+                    }
+                }
             </select>
         </div>
 
@@ -48,7 +61,7 @@
                     if (servicio.Estado)
                     {
                         <div>
-                            <input type="checkbox" id="@servicio.Id_servicio" name="@servicio.Id_servicio" value="@servicio.Nombre" />
+                            <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" />
                             <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
                         </div>
                         
@@ -85,8 +98,70 @@
                 },
                 'Mes': {
                     required: true
+                },
+                'Servicios': {
+                    required: true
                 }
+            },
+
+            submitHandler: function (form) {
+                obtCheckboxes();
             }
+            
         });
+
+        function loadDropdown(url, parametros, ddl, selected) {
+            $.ajax({
+                url: url,
+                datatype: 'json',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(parametros),
+                success: function (data) {
+                    ddl.empty();
+                    ddl.append("<option value=''>Seleccione una opción</option>");
+                    $(data).each(function () {
+                        var option = new Option(this.Nombre, this.Id);
+                        if (this.Id == selected) {
+                            option.selected = true;
+                        }
+                        ddl.append(option);
+                    });
+
+                },
+                error: function (jQxhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        };
+
+        function setChanges() {
+            $("#IdCliente").change(function () {
+                loadDropdown("/Cobro/Casas", { idCliente: $("#IdCliente").val() }, $("#IdCasa"));
+                obtCheckboxes();
+            });
+        };
+
+        function obtCheckboxes() {
+            var checkboxes = document.querySelectorAll('input[name="Servicios"]:checked');
+            var list = [];
+
+            //$.each($("input[name='Servicios']:checked"), function () {
+            //    list.push($(this).val());
+            //});
+
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+
+                list.push(checkboxes[i].value);
+            }
+            console.log(list);
+
+        }
+
+        $(document).ready(function () {
+            loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"));
+            setChanges();
+        });
+
     </script>
 }

@@ -35,6 +35,11 @@ namespace G03_Sistema_Condominios.Controllers
             var servicios = new List<SpConsultarServiciosResult>();
             var cobroView = new ModelCobroView();
 
+            //Se cargan las listas de meses y años
+            cobroView.annos = new List<int>() {2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034};
+            cobroView.meses  = new List<string>() {"Enero", "Febrero", "Marzo", "Mayo", "Abril", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+
+
 
             try 
             {
