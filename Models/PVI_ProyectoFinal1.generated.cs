@@ -637,16 +637,21 @@ namespace DataModels
 
 		#region SpModificarServicios
 
-		public static int SpModificarServicios(this PviProyectoFinalDB dataConnection, int? @idServicio, string @descripcion, decimal? @precio)
+		public static int SpModificarServicios(this PviProyectoFinalDB dataConnection, int? @idServicio, string @nombre, string @descripcion, decimal? @precio, int? @idCategoria)
 		{
 			var parameters = new []
 			{
-				new DataParameter("@id_servicio", @idServicio,  LinqToDB.DataType.Int32),
-				new DataParameter("@descripcion", @descripcion, LinqToDB.DataType.Text)
+				new DataParameter("@id_servicio",  @idServicio,  LinqToDB.DataType.Int32),
+				new DataParameter("@nombre",       @nombre,      LinqToDB.DataType.VarChar)
+				{
+					Size = 50
+				},
+				new DataParameter("@descripcion",  @descripcion, LinqToDB.DataType.Text)
 				{
 					Size = 2147483647
 				},
-				new DataParameter("@precio",      @precio,      LinqToDB.DataType.Decimal)
+				new DataParameter("@precio",       @precio,      LinqToDB.DataType.Decimal),
+				new DataParameter("@id_categoria", @idCategoria, LinqToDB.DataType.Int32)
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[spModificarServicios]", parameters);

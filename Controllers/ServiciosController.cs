@@ -69,15 +69,19 @@ namespace G03_Sistema_Condominios.Controllers
                     {
                         db.SpCreaServicios(servicio.Nombre, servicio.Descripcion, servicio.Precio, servicio.IdCategoria);
 
-                        ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+                        //ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
 
-                        resultado = "Se ha guardado exitosamente";
+                        //resultado = "Se ha guardado exitosamente";
                     }
                     else
                     {
-                        db.SpModificarServicios(servicio.IdServicio, servicio.Descripcion, servicio.Precio);
-                        resultado = "Se ha guardado exitosamente";
+                        db.SpModificarServicios(servicio.IdServicio,servicio.Nombre ,servicio.Descripcion, servicio.Precio, servicio.IdCategoria);
+                    
                     }
+
+                    ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+
+                    resultado = "Se ha guardado exitosamente";
 
                 }
             }
@@ -85,8 +89,8 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 resultado = "No se ha guardado exitosamente";
             }
-
-            return View();
+            ViewBag.Resultado = resultado;
+            return View(servicio);
         }
 
         public ActionResult InactivarServicio(int? idServicio)
