@@ -432,23 +432,14 @@ namespace DataModels
 
 		#region SpConsultarServiciosPorID
 
-		public static IEnumerable<SpConsultarServiciosPorIDResult> SpConsultarServiciosPorID(this PviProyectoFinalDB dataConnection, int? @idServicio)
+		public static IEnumerable<Servicio> SpConsultarServiciosPorID(this PviProyectoFinalDB dataConnection, int? @idServicio)
 		{
 			var parameters = new []
 			{
 				new DataParameter("@id_servicio", @idServicio, LinqToDB.DataType.Int32)
 			};
 
-			return dataConnection.QueryProc<SpConsultarServiciosPorIDResult>("[dbo].[spConsultarServiciosPorID]", parameters);
-		}
-
-		public partial class SpConsultarServiciosPorIDResult
-		{
-			[Column("id_servicio") ] public int     Id_servicio  { get; set; }
-			[Column("nombre")      ] public string  Nombre       { get; set; }
-			[Column("descripcion") ] public string  Descripcion  { get; set; }
-			[Column("precio")      ] public decimal Precio       { get; set; }
-			[Column("id_categoria")] public int     Id_categoria { get; set; }
+			return dataConnection.QueryProc<Servicio>("[dbo].[spConsultarServiciosPorID]", parameters);
 		}
 
 		#endregion

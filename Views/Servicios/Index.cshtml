@@ -9,6 +9,16 @@
 @Html.ActionLink("Crear Servicio", "CrearServicio", null, new { @class = "btn btn-primary" })
 <br />
 
+@* TempData persiste datos entre solicitudes HTTP y se borra después de ser leído por la vista. 
+   Al usarlo, el mensaje estará disponible en la nueva solicitud generada por RedirectToAction, 
+   garantizando que el usuario lo vea en la vista Index. *@
+@if (TempData["Resultado"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Resultado"]
+    </div>
+}
+
 <table class="table table-bordered table-bordered table-striped">
 
     <tr>
@@ -32,9 +42,9 @@
                 <td>@es.Precio</td>
                 <td>@es.IdCategoria</td>
                 <td>@es.Estado</td> @*Recordar cambiar el estado a Activo/Inactivo*@
-            <td>
-                @Html.ActionLink("Modificar Servicio", "CrearServicio", "Servicios", new { IdServicio = es.IdServicio }, new { @class = "btn btn-primary" })
-            </td>
+                <td>
+                    @Html.ActionLink("Modificar Servicio", "CrearServicio", "Servicios", new { IdServicio = es.IdServicio }, new { @class = "btn btn-primary" })
+                </td>
             </tr>
         }
     }

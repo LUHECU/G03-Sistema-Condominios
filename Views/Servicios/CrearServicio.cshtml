@@ -12,6 +12,13 @@ else
     <h2>Modificar Servicio</h2>
 }
 
+@if (this.Model != null && !this.Model.Estado)
+{
+    <div class="alert alert-warning">
+        @ViewBag.Resultado
+    </div>
+}
+
 
 <form method="post" id="myform">
 
@@ -38,7 +45,7 @@ else
 
     <input type="submit" class="btn btn-primary" value="Guardar" />
 
-    @if (this.Model != null && this.Model.IdServicio != 0)
+    @if (this.Model != null && this.Model.IdServicio != 0 && this.Model.Estado)
     {
         @Html.ActionLink("Inactivar", "InactivarServicio", "Servicios", new { idServicio = Model.IdServicio }, new { @class = "btn btn-danger" })
     }

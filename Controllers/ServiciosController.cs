@@ -36,22 +36,31 @@ namespace G03_Sistema_Condominios.Controllers
                 {
                     servicio = db.SpConsultarServiciosPorID(idServicio).Select(x => new ModelServicio
                         {
-                        IdServicio = x.Id_servicio,
+                        IdServicio = x.IdServicio,
                         Nombre = x.Nombre,
                         Descripcion = x.Descripcion,
                         Precio = x.Precio,
-                        IdCategoria = x.Id_categoria,
+                        IdCategoria = x.IdCategoria,
+                        Estado = x.Estado
 
                     }).FirstOrDefault();
 
                     ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
 
+                    // Si el servicio está inactivo, muestra un mensaje o redirige a otra página
+                    if (servicio != null && !servicio.Estado)
+                    {
+                        TempData["Resultado"] = "El servicio seleccionado está inactivo y no puede ser modificado.";
+                        return RedirectToAction("Index"); // Redirige a Index
+                    }
+
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
-            }
+                TempData["Resultado"] = "Ocurrió un error al cargar el servicio: " + ex.Message;
+                return RedirectToAction("Index");
+            }           
 
             return View(servicio);
         }
@@ -65,6 +74,8 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+
+                    //Logica para crear o modificar el servicio 
                     if (servicio.IdServicio == 0)
                     {
                         db.SpCreaServicios(servicio.Nombre, servicio.Descripcion, servicio.Precio, servicio.IdCategoria);
@@ -97,6 +108,14 @@ namespace G03_Sistema_Condominios.Controllers
         {
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
+                // Verificar si el servicio ya está inactivo
+                var servicio = db.SpConsultarServiciosPorID(idServicio).FirstOrDefault();
+                if (servicio != null && !servicio.Estado)
+                {
+                    ViewBag.Resultado = "El servicio ya está inactivo.";
+                    return RedirectToAction("Index");
+                }
+
                 db.SpInactivarServicio(idServicio);
             }
             return RedirectToAction("Index");
