@@ -35,7 +35,7 @@ namespace G03_Sistema_Condominios.Controllers
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
                     servicio = db.SpConsultarServiciosPorID(idServicio).Select(x => new ModelServicio
-                        {
+                    {
                         IdServicio = x.IdServicio,
                         Nombre = x.Nombre,
                         Descripcion = x.Descripcion,
@@ -44,6 +44,21 @@ namespace G03_Sistema_Condominios.Controllers
                         Estado = x.Estado
 
                     }).FirstOrDefault();
+
+                    //var serviceData = db.SpConsultarServiciosPorID(idServicio).FirstOrDefault();
+                    //ModelServicio servicio = null;
+                    //if (serviceData != null)
+                    //{
+                    //    servicio = new ModelServicio
+                    //    {
+                    //        IdServicio = serviceData.IdServicio,
+                    //        Nombre = serviceData.Nombre,
+                    //        Descripcion = serviceData.Descripcion,
+                    //        Precio = serviceData.Precio,
+                    //        IdCategoria = serviceData.IdCategoria,
+                    //        Estado = serviceData.Estado
+                    //    };
+                    //}
 
                     ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
 
@@ -54,6 +69,7 @@ namespace G03_Sistema_Condominios.Controllers
                         return RedirectToAction("Index"); // Redirige a Index
                     }
 
+                    return View(servicio);
                 }
             }
             catch(Exception ex)
@@ -62,7 +78,7 @@ namespace G03_Sistema_Condominios.Controllers
                 return RedirectToAction("Index");
             }           
 
-            return View(servicio);
+           // return View(servicio);
         }
 
         [HttpPost]

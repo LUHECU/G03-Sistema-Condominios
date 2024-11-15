@@ -47,7 +47,7 @@ else
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Cliente: </label>
+        <label class="form-label">Categoría del Servicio: </label>
         @*@Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control", @disabled = (Model.IdServicio!=0) ? "disabled" : null })*@
         @if (this.Model == null)
         {
@@ -55,7 +55,8 @@ else
         }
         else
         {
-            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control", @disabled = "disabled" })
+            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control", disabled = "disabled" })
+            @Html.HiddenFor(model => model.IdCategoria)
         }
 
     </div>
@@ -78,7 +79,7 @@ else
 @section Scripts
     {
     @Scripts.Render("~/bundles/jqueryval") @*esta validación va a indicarle al usuario que cada campo es obligatorio*@
-    <script src="~/Scripts/validacionesGenericas.js"></script> @*esto le da estilos a los mensajes de las validaciones*@
+    @*<script src="~/Scripts/validacionesGenericas.js"></script>*@ @*esto le da estilos a los mensajes de las validaciones*@
     <script type="text/javascript">
         $("#myform").validate({
             rules:
