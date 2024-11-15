@@ -25,7 +25,15 @@ else
     @Html.HiddenFor(model => model.IdServicio)
     <div class="mb-3">
         <label class="form-label">Nombre del Servicio: </label>
-        @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+        @*@Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @readonly = (Model.IdServicio!=0) ? "readonly" : null })*@
+        @if (this.Model == null)
+        {
+            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+        }
+        else
+        {
+            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @readonly = "readonly" })
+        }
     </div>
 
     <div class="mb-3">
@@ -40,7 +48,16 @@ else
 
     <div class="mb-3">
         <label class="form-label">Cliente: </label>
-        @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control" })
+        @*@Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control", @disabled = (Model.IdServicio!=0) ? "disabled" : null })*@
+        @if (this.Model == null)
+        {
+            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control" })
+        }
+        else
+        {
+            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control", @disabled = "disabled" })
+        }
+
     </div>
 
     <input type="submit" class="btn btn-primary" value="Guardar" />
