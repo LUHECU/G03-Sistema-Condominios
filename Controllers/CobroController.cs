@@ -57,28 +57,47 @@ namespace G03_Sistema_Condominios.Controllers
             return View(cobroView);
         }
 
-        //[HttpPost]
-        //public ActionResult CrearModificarCobro(Cobro cobro)
-        //{
+        [HttpPost]
+        public JsonResult CrearModificarCobro(Cobro cobro, List<string> servicios)
+        {
 
-        //    try
-        //    {
-        //        using (var db = new PviProyectoFinalDB("MyDatabase"))
-        //        {
-        //            if (cobro.IdCobro == 0)
-        //            {
-        //                db.SpCrearCobro(cobro.IdCasa, cobro.Mes, cobro.Anno);
-        //            }
-        //            else 
-        //            {
+            //Se instacia el cobroView nuevamente
+            var cobroView = new ModelCobroView();
 
-        //            }
-        //        }
-        //    }
-        //    catch { }
+            //Se cargan las listas de meses y años
+            cobroView.annos = new List<int>() { 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034 };
+            cobroView.meses = new List<string>() { "Enero", "Febrero", "Marzo", "Mayo", "Abril", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
 
-        //    return View();
-        //}
+            //Variables de cobro
+            //var idCasa = cobroView.Cobro.IdCasa;
+
+
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    //if (cobroView.Cobro.IdCobro == 0)
+                    //{
+                    //    db.SpCrearCobro(cobro.IdCasa, cobro.Mes, cobro.Anno);
+                    //}
+                    //else
+                    //{
+
+                    //}
+
+                    foreach (var id in servicios) 
+                    {
+                        @ViewBag.Prueba = id;
+                    }
+
+
+                    
+                }
+            }
+            catch { }
+
+            return Json(cobroView);
+        }
 
 
         public JsonResult Clientes()

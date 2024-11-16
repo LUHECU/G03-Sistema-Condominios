@@ -78,6 +78,12 @@
 
     </form>
 
+
+
+    <div class="mt-5">
+        @ViewBag.Prueba
+    </div>
+
 </div>
 
 
@@ -103,10 +109,10 @@
                     required: true
                 }
             },
-
-            submitHandler: function (form) {
-                obtCheckboxes();
+             submitHandler: function (form) {
+                guardar();
             }
+            
             
         });
 
@@ -138,11 +144,11 @@
         function setChanges() {
             $("#IdCliente").change(function () {
                 loadDropdown("/Cobro/Casas", { idCliente: $("#IdCliente").val() }, $("#IdCasa"));
-                obtCheckboxes();
             });
         };
 
         function obtCheckboxes() {
+           
             var checkboxes = document.querySelectorAll('input[name="Servicios"]:checked');
             var list = [];
 
@@ -156,11 +162,33 @@
             }
             console.log(list);
 
+            
+
+            return list;
+        }
+
+        function guardar() {
+            var dataCobro = {
+                IdCliente: $("#IdCliente").val(),
+                IdCasa: $("#IdCasa").val(),
+                Anno: $("#Anno").val(),
+                Mes: $("#Mes").val()
+            };
+
+            var dataServicios = obtCheckboxes();
+
+            console.log(dataCobro);
+
+            $.post("/Cobro/CrearModificarCobro", { cobro: dataCobro, servicios: dataServicios }, function (data) {
+                alert(data); location.reload();
+            });
+
         }
 
         $(document).ready(function () {
             loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"));
             setChanges();
+            obtCheckboxes();
         });
 
     </script>
