@@ -260,7 +260,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\PVI_ProyectoFinal1.generated.cs">
+    <Compile Include="Models\PVI_ProyectoFinal.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PVI_ProyectoFinal.tt</DependentUpon>
@@ -290,7 +290,7 @@
     <Content Include="LinqToDB.Templates\CopyMe.SqlServer.tt.txt" />
     <Content Include="Models\PVI_ProyectoFinal.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PVI_ProyectoFinal1.generated.cs</LastGenOutput>
+      <LastGenOutput>PVI_ProyectoFinal.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
