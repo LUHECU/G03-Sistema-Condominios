@@ -24,16 +24,28 @@ namespace G03_Sistema_Condominios.Controllers
             return View(list);
         }
 
-        public ActionResult CrearCasa()
+        public ActionResult CrearCasa(int? idCasa)
         {
+            var casa = new ModelCasa();
+
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
+                casa = db.SpConsultarCasasPorID(idCasa).Select(x => new ModelCasa
+                {
+                    IdCasa = x.Id_casa,
+                    NombreCasa = x.Nombre_casa,
+                    MetrosCuadrados = x.Metros_cuadrados,
+                    NumeroHabitaciones = x.Numero_habitaciones,
+                    NumeroBanos = x.Numero_banos,   
+                    IdPersona = x.Id_persona,
+                    FechaConstruccion = x.Fecha_construccion
+                }).FirstOrDefault();
                 
                 //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
                 ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
             }
 
-            return View();
+            return View(casa);
         }
 
         [HttpPost]
@@ -43,12 +55,19 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
-                    db.SpCreaCasa(casa.NombreCasa,casa.MetrosCuadrados,casa.NumeroHabitaciones,casa.NumeroBanos,casa.Precion,casa.IdPersona,casa.FechaConstruccion,casa.Estado);
+                    if (casa.IdCasa == 0) {
+
+                        db.SpCreaCasa(casa.NombreCasa, casa.MetrosCuadrados, casa.NumeroHabitaciones, casa.NumeroBanos, casa.IdPersona, casa.FechaConstruccion);
+                        
+                    }
+                    else
+                    {
+                        db.SpModificarCasa(casa.IdCasa,casa.NombreCasa,casa.MetrosCuadrados,casa.NumeroHabitaciones,casa.NumeroBanos,casa.IdPersona,casa.FechaConstruccion);
+                    }
+
                     //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
                     ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
                 }
-
-
 
             }
             catch

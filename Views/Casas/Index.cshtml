@@ -34,7 +34,9 @@
                 <td>@es.Propietario</td>
                 <td>@es.Fecha_construccion.ToString("dd/MM/yyyy")</td>
                 <td>@es.Estado</td> @*Recordar cambiar el estado a Activo/Inactivo*@
-                <td></td>
+            <td>
+                @Html.ActionLink("Modificar Servicio", "CrearCasa", "Casas", new { IdCasa = es.Id_casa }, new { @class = "btn btn-primary" })
+            </td>
             </tr>
         }
     }
