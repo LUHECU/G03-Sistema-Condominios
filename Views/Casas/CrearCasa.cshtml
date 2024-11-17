@@ -30,7 +30,7 @@
 
     <div class="mb-3">
         <label class="form-label">Cliente: </label>
-        @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "IdPersona", "Nombre"), "Seleccione un dueño:", new { @class = "form-control" })
+        @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "Id_persona", "Cliente"), "Seleccione un dueño:", new { @class = "form-control" })
     </div>
 
     <div class="mb-3">
@@ -42,3 +42,24 @@
     <a href="/Casas/Index" class="btn btn-secondary">Regresar</a>
 
 </form>
+
+
+@*Llamamos al jquery validation solo para esta pagina porque solo sirve en forms*@
+@section Scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval") @*esta validación va a indicarle al usuario que cada campo es obligatorio*@
+    <script src="~/Scripts/validacionesGenericas.js"></script> @*esto le da estilos a los mensajes de las validaciones*@
+    <script type="text/javascript">
+        $("#myform").validate({
+            rules:
+            {
+                'NombreCasa': { required: true, alphanumeric: true, minlength: 1, maxlength: 50 },
+                'MetrosCuadrados': { required: true, number: true, min: 1, step: 0.01 },
+                'NumeroHabitaciones': { required: true, number: true, min: 1, max: 8, digits: true },
+                'NumeroBanos': { required: true, number: true, min: 1, max: 4, digits: true },
+                'IdPersona': { required: true },
+                'FechaConstruccion': { required: true, date: true },
+            }
+        });
+    </script>
+}

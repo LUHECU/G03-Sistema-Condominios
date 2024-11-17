@@ -43,8 +43,12 @@ else
 
     <div class="mb-3">
         <label class="form-label">Precio: </label>
-        @Html.TextBoxFor(model => model.Precio, new { @class = "form-control" })
+        @Html.TextBoxFor(model => model.Precio, new { @class = "form-control", name = "Precio" })
+
+        @*<input type="text" id="Precio" name="Precio" value="" class="form-control" />*@
     </div>
+   
+
 
     <div class="mb-3">
         <label class="form-label">Categoría del Servicio: </label>
@@ -81,14 +85,35 @@ else
     @Scripts.Render("~/bundles/jqueryval") @*esta validación va a indicarle al usuario que cada campo es obligatorio*@
     <script src="~/Scripts/validacionesGenericas.js"></script> @*esto le da estilos a los mensajes de las validaciones*@
     <script type="text/javascript">
+
+        // Definir regla personalizada alphanumeric
+        $.validator.addMethod("alphanumeric", function (value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9\s]+$/.test(value);
+        }, "Solo se permiten caracteres alfanuméricos.");
+
         $("#myform").validate({
             rules:
             {
                 'Nombre': { required: true, alphanumeric: true, minlength: 1, maxlength: 250 },
                 'Descripcion': { required: true, alphanumeric: true, maxlength: 250 },
-                'Precio': { required: true, number: true, min: 1, step: 0.01 },
+                'Precio': { required: true, number: true, min: 1, step: 0.01 }, 
                 'IdCategoria': { required: true },
             }
         });
+
+        //// Sobrescribir el método number para permitir coma como separador decimal
+        //$.validator.methods.number = function (value, element) {
+        //    return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:[.,]\d+)?$/.test(value);
+        //};
+
+        //// Redondear y reemplazar comas con puntos antes de enviar el formulario
+        //$('#Precio').on('blur', function () {
+        //    let value = $(this).val().replace(',', '.'); // Reemplaza coma por punto
+        //    let decimalValue = parseFloat(value);
+        //    if (!isNaN(decimalValue)) {
+        //        $(this).val(decimalValue.toFixed(2));
+        //    }
+        //});
+
     </script>
 }

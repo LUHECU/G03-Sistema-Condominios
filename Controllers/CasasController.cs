@@ -26,6 +26,12 @@ namespace G03_Sistema_Condominios.Controllers
 
         public ActionResult CrearCasa()
         {
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+                
+                //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
+                ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
+            }
 
             return View();
         }
@@ -35,12 +41,15 @@ namespace G03_Sistema_Condominios.Controllers
         {
             try
             {
-                using (var db = new PviProyectoFinalDB("MyDataBase"))
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
                     db.SpCreaCasa(casa.NombreCasa,casa.MetrosCuadrados,casa.NumeroHabitaciones,casa.NumeroBanos,casa.Precion,casa.IdPersona,casa.FechaConstruccion,casa.Estado);
                     //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
                     ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
                 }
+
+
+
             }
             catch
             {

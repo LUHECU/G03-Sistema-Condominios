@@ -86,6 +86,12 @@ namespace G03_Sistema_Condominios.Controllers
         {
             var resultado = string.Empty;
 
+            //if (servicio.Precio == 0)
+            //{
+            //    // Log para depurar
+            //    System.Diagnostics.Debug.WriteLine("El valor de Precio es: " + servicio.Precio);
+            //}
+
             try
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
