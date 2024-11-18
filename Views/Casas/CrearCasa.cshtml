@@ -56,6 +56,12 @@ else
     </div>
 
     <input type="submit" class="btn btn-primary" value="Guardar" />
+
+    @if (this.Model != null && this.Model.IdCasa != 0 && this.Model.Estado)
+    {
+        @Html.ActionLink("Inactivar", "InactivarCasa", "Casas", new { IdCasa = Model.IdCasa }, new { @class = "btn btn-danger" })
+    }
+
     <a href="/Casas/Index" class="btn btn-secondary">Regresar</a>
 
 </form>
