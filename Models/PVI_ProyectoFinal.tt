@@ -16,7 +16,6 @@
 	2. Modify the connection settings below to connect to your database.
 
 	3. Add connection string to the web/app.config file:
-
 		<connectionStrings>
 			<add name="MyDatabase" providerName="System.Data.SqlClient"
 				connectionString="Data Source=.;Database=MyDatabase;User Id=User;Password=TestPassword;" />
@@ -116,7 +115,7 @@
 
 	// to configure GetSchemaOptions properties, add them here, before load metadata call
 
-	LoadSqlServerMetadata("LaptopMefi\\SQLEXPRESS", "PVI_ProyectoFinal");
+	LoadSqlServerMetadata("Data Source=LaptopMefi\\SQLEXPRESS;Database=PVI_ProyectoFinal;Integrated Security=True");
 //	LoadSqlServerMetadata(".", "MyDatabase"); // Integrated Security
 //	LoadSqlServerMetadata(string connectionString);
 
