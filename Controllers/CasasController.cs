@@ -48,7 +48,7 @@ namespace G03_Sistema_Condominios.Controllers
                     //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
                     ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
 
-                    // Si el servicio está inactivo, muestra un mensaje o redirige a otra página
+                    // Si la casa está inactiva, muestra un mensaje y redirige a otra página
                     if (casa != null && !casa.Estado)
                     {
                         TempData["Resultado"] = "La casa seleccionada está inactiva y no puede ser modificada.";
@@ -101,13 +101,13 @@ namespace G03_Sistema_Condominios.Controllers
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
                 //verificar el estado de la casa 
-               // var casa = db.SpConsultarCasasPorID(idCasa).FirstOrDefault();
+                var casa = db.SpConsultarCasasPorID(idCasa).FirstOrDefault();
 
-                //if (casa != null && !casa.Estado)
-                //{
-                //    ViewBag.Resultado = "La casa ya está inactiva.";
-                //    return RedirectToAction("Index");
-                //}              
+                if (casa != null && casa.Estado == false)
+                {
+                    ViewBag.Resultado = "La casa ya está inactiva.";
+                    return RedirectToAction("Index");
+                }
 
                 db.SpInactivarCasa(idCasa);
             }

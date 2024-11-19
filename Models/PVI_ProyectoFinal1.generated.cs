@@ -760,6 +760,32 @@ namespace DataModels
 		}
 
 		#endregion
+
+		#region SpVerificarPendientesServicio
+
+		public static IEnumerable<SpVerificarPendientesServicioResult> SpVerificarPendientesServicio(this PviProyectoFinalDB dataConnection, int? @idServicio)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_servicio", @idServicio, LinqToDB.DataType.Int32)
+			};
+
+			var ms = dataConnection.MappingSchema;
+
+			return dataConnection.QueryProc(dataReader =>
+				new SpVerificarPendientesServicioResult
+				{
+					Column1 = Converter.ChangeTypeTo<int>(dataReader.GetValue(0), ms),
+				},
+				"[dbo].[SpVerificarPendientesServicio]", parameters);
+		}
+
+		public partial class SpVerificarPendientesServicioResult
+		{
+			[Column("")] public int Column1 { get; set; }
+		}
+
+		#endregion
 	}
 
 	public static partial class SqlFunctions

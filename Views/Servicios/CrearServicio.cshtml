@@ -12,13 +12,16 @@ else
     <h2>Modificar Servicio</h2>
 }
 
-@if (this.Model != null && !this.Model.Estado)
+@*Que se muestre el mensaje de exito o error*@
+@*@if (this.Model != null || this.Model == null)*@
+@if (!string.IsNullOrEmpty(ViewBag.Resultado))
 {
     <div class="alert alert-warning">
         @ViewBag.Resultado
     </div>
 }
 
+<br>
 
 <form method="post" id="myform">
 
@@ -47,7 +50,7 @@ else
 
         @*<input type="text" id="Precio" name="Precio" value="" class="form-control" />*@
     </div>
-   
+
 
 
     <div class="mb-3">
@@ -77,7 +80,13 @@ else
 </form>
 
 @*Que se muestre el mensaje de exito o error*@
-@ViewBag.Resultado
+@*@if (this.Model != null || this.Model == null)*@
+@if (!string.IsNullOrEmpty(ViewBag.Resultado))
+{
+    <div class="alert alert-warning">
+        @ViewBag.Resultado
+    </div>
+}
 
 @*Llamamos al jquery validation solo para esta pagina porque solo sirve en forms*@
 @section Scripts
@@ -96,7 +105,7 @@ else
             {
                 'Nombre': { required: true, alphanumeric: true, minlength: 1, maxlength: 250 },
                 'Descripcion': { required: true, alphanumeric: true, maxlength: 250 },
-                'Precio': { required: true, number: true, min: 1, step: 0.01 }, 
+                'Precio': { required: true, number: true, min: 1, step: 0.01 },
                 'IdCategoria': { required: true },
             }
         });
