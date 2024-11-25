@@ -12,24 +12,41 @@ else
     <h2>Modificar Casa</h2>
 }
 
-@*@if (this.Model != null && !this.Model.Estado)
+@*Que se muestre el mensaje de exito o error*@
+@*@if (this.Model != null || this.Model == null)*@
+@if (!string.IsNullOrEmpty(ViewBag.Resultado))
 {
     <div class="alert alert-warning">
         @ViewBag.Resultado
     </div>
-}*@
+}
 
 <form method="post" id="myform">
 
     @Html.HiddenFor(model => model.IdCasa)
+
     <div class="mb-3">
         <label class="form-label">Nombre de la Casa: </label>
-        @Html.TextBoxFor(model => model.NombreCasa, new { @class = "form-control" })
+        @if (this.Model == null)
+        {
+            @Html.TextBoxFor(model => model.NombreCasa, new { @class = "form-control" })
+        }
+        else
+        {
+            @Html.TextBoxFor(model => model.NombreCasa, new { @class = "form-control", @readonly = "readonly" })
+        }
     </div>
 
     <div class="mb-3">
         <label class="form-label">Metros Cuadrados: </label>
-        @Html.TextBoxFor(model => model.MetrosCuadrados, new { @class = "form-control" })
+        @if (this.Model == null)
+        {
+            @Html.TextBoxFor(model => model.MetrosCuadrados, new { @class = "form-control" })
+        }
+        else
+        {
+            @Html.TextBoxFor(model => model.MetrosCuadrados, new { @class = "form-control", @readonly = "readonly" })
+        }
     </div>
 
     <div class="mb-3">
@@ -46,13 +63,29 @@ else
         <label class="form-label">Cliente: </label>
         @if (ViewBag.Clientes != null && ViewBag.Clientes.Count > 0)
         {
-            @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "Id_persona", "Cliente"), "Seleccione un dueño:", new { @class = "form-control" })
+            if (this.Model == null)
+            {
+                @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "Id_persona", "Cliente"), "Seleccione un dueño:", new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "Id_persona", "Cliente"), "Seleccione un dueño:", new { @class = "form-control", disabled = "disabled" })
+                @Html.HiddenFor(model => model.IdPersona)
+            }
         }
     </div>
 
     <div class="mb-3">
         <label class="form-label">Fecha de Construcción: </label>
-        @Html.TextBoxFor(model => model.FechaConstruccion, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @placeholder = "dd-MM-yyyy" })
+        @if (this.Model == null)
+        {
+            @Html.TextBoxFor(model => model.FechaConstruccion, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @placeholder = "dd-MM-yyyy" })
+        }
+        else
+        {
+            @Html.TextBoxFor(model => model.FechaConstruccion, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @placeholder = "dd-MM-yyyy", @readonly = "readonly" })
+        }
+
     </div>
 
     <input type="submit" class="btn btn-primary" value="Guardar" />

@@ -69,30 +69,38 @@ namespace G03_Sistema_Condominios.Controllers
         [HttpPost]
         public ActionResult CrearCasa(G03_Sistema_Condominios.Models.ModelCasa casa)
         {
+            var resultado = string.Empty;
+
             try
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+
+                    //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
+                    ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
+
                     if (casa.IdCasa == 0) {
 
                         db.SpCreaCasa(casa.NombreCasa, casa.MetrosCuadrados, casa.NumeroHabitaciones, casa.NumeroBanos, casa.IdPersona, casa.FechaConstruccion);
-                        
+                        resultado = "Se ha creado una nueva casa exitosamente";
                     }
                     else
                     {
                         db.SpModificarCasa(casa.IdCasa,casa.NombreCasa,casa.MetrosCuadrados,casa.NumeroHabitaciones,casa.NumeroBanos,casa.IdPersona,casa.FechaConstruccion);
+                        resultado = "Se ha modificado la casa exitosamente";
+                        return View(casa);
                     }
 
-                    //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
-                    ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
+                   
                 }
 
             }
             catch
             {
-
+                resultado = "No se ha guardado exitosamente la información";
             }
 
+            ViewBag.Resultado = resultado;
             return View();
         }
 
