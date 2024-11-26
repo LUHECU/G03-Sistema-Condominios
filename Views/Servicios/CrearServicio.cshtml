@@ -46,9 +46,11 @@ else
 
     <div class="mb-3">
         <label class="form-label">Precio: </label>
-        @Html.TextBoxFor(model => model.Precio, new { @class = "form-control", name = "Precio" })
+        @Html.TextBoxFor(model => model.Precio, "{0:#.#}", new { @class = "form-control", name = "Precio" })  @*, @type = "number", @step = "0.01"*@
 
-        @*<input type="text" id="Precio" name="Precio" value="" class="form-control" />*@
+        @*@Html.TextBoxFor(model => model.Precio, new { @class = "form-control", name = "Precio", @type = "text" })*@
+
+        @*<input type="number" step="0.01" id="Precio" name="Precio" value="" class="form-control" />*@
     </div>
 
 
@@ -107,6 +109,20 @@ else
                 'Descripcion': { required: true, alphanumeric: true, maxlength: 250 },
                 'Precio': { required: true, number: true, min: 1, step: 0.01 },
                 'IdCategoria': { required: true },
+            }
+           
+        });
+
+        $("input[name='Precio']").on("input", function () {
+            this.value = this.value.replace(",", ".");
+        });
+
+
+        // Validate price format before form submission 
+        $("#myform").on("submit", function () {
+            var precio = $("input[name='Precio']").val(); if (!/^\d+(\.\d{1,2})?$/.test(precio)) {
+                alert("Por favor, ingresa un valor numérico válido para el precio con hasta 2 decimales.");
+                return false;
             }
         });
 
