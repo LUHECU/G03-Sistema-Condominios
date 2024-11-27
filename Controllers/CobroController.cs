@@ -29,7 +29,7 @@ namespace G03_Sistema_Condominios.Controllers
             return View(list);
         }
 
-        public ActionResult CrearModificarCobro() 
+        public ActionResult CrearModificarCobro(int? id) 
         {
             var cobro = new ModelCobro();
             var servicios = new List<SpConsultarServiciosResult>();
@@ -45,6 +45,8 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 using(var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+
+                    cobro = db.SpConsultarCobroPorId(id).Select(_ => new ModelCobro{ }).FirstOrDefault();
 
                     servicios = db.SpConsultarServicios().ToList();
                     cobroView.Servicios = servicios;
