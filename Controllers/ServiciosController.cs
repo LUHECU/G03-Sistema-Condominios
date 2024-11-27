@@ -87,6 +87,29 @@ namespace G03_Sistema_Condominios.Controllers
         {
             var resultado = string.Empty;
 
+            // Validar y convertir el precio
+            //try
+            //{
+            //    if (decimal.TryParse(servicio.Precio.ToString().Replace(",", "."), out var parsedPrice))
+            //    {
+            //        servicio.Precio = parsedPrice;
+            //    }
+            //    else
+            //    {
+            //        // Manejar el caso donde la conversión falla
+            //        ViewBag.Resultado = "El valor ingresado en el campo Precio no es válido.";
+            //       // ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+            //        return View(servicio);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Capturar excepciones inesperadas durante la conversión
+            //    ViewBag.Resultado = $"Ocurrió un error al procesar el precio: {ex.Message}";
+            //    //ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+            //    return View(servicio);
+            //}
+
             if (servicio.Precio == 0)
             {
                 // Log para depurar

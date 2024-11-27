@@ -12,7 +12,7 @@ namespace G03_Sistema_Condominios.Models
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:#.#}")]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:#.#}")]
         public decimal Precio { get; set; }
         public int IdCategoria { get; set; }    
         public bool Estado { get; set; }
