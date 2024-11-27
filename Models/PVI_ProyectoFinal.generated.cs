@@ -258,6 +258,35 @@ namespace DataModels
 
 	public static partial class PviProyectoFinalDBStoredProcedures
 	{
+		#region SpAuthenticateUser
+
+		public static IEnumerable<SpAuthenticateUserResult> SpAuthenticateUser(this PviProyectoFinalDB dataConnection, string @Email, string @Password)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@Email",    @Email,    LinqToDB.DataType.NVarChar)
+				{
+					Size = 150
+				},
+				new DataParameter("@Password", @Password, LinqToDB.DataType.NVarChar)
+				{
+					Size = 255
+				}
+			};
+
+			return dataConnection.QueryProc<SpAuthenticateUserResult>("[dbo].[sp_AuthenticateUser]", parameters);
+		}
+
+		public partial class SpAuthenticateUserResult
+		{
+			public string Message     { get; set; }
+			public int?   UserID      { get; set; }
+			public string UserName    { get; set; }
+			public string TipoUsuario { get; set; }
+		}
+
+		#endregion
+
 		#region SpConsultarBitacora
 
 		public static IEnumerable<SpConsultarBitacoraResult> SpConsultarBitacora(this PviProyectoFinalDB dataConnection, int? @idCobro)
@@ -471,6 +500,27 @@ namespace DataModels
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[spInactivarServicio]", parameters);
+		}
+
+		#endregion
+
+		#region SpLogin
+
+		public static IEnumerable<Persona> SpLogin(this PviProyectoFinalDB dataConnection, string @Email, string @contrasena)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@Email",      @Email,      LinqToDB.DataType.VarChar)
+				{
+					Size = 150
+				},
+				new DataParameter("@contrasena", @contrasena, LinqToDB.DataType.VarChar)
+				{
+					Size = 15
+				}
+			};
+
+			return dataConnection.QueryProc<Persona>("[dbo].[spLogin]", parameters);
 		}
 
 		#endregion

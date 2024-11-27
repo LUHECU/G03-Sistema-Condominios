@@ -21,6 +21,7 @@
 				connectionString="Data Source=.;Database=MyDatabase;User Id=User;Password=TestPassword;" />
 		</connectionStrings>
 
+
 	4. To access your database use the following code:
 
 		using (var db = new MyDatabaseDB())
