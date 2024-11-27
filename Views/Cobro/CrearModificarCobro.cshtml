@@ -11,6 +11,8 @@
 
     <form method="post" id="FormCobro">
 
+        <input type="hidden" id="IdCobro" name="IdCobro"/>
+
         <div class="mb-3">
             <label class="form-label" for="IdCliente">Cliente</label>
             <select id="IdCliente" name="IdCliente" class="form-control">
@@ -33,7 +35,7 @@
                 @{
                     foreach (var anno in this.Model.annos)
                     {
-                        <option id="@anno" name="@anno" value="@anno">@anno</option>
+                        <option value="@anno">@anno</option>
                     }
                 }
             </select>
@@ -44,9 +46,11 @@
             <select id="Mes" name="Mes" class="form-control">
                 <option value="">Seleccione una opción</option>
                 @{
+                    var contador = 1;
                     foreach (var mes in this.Model.meses)
                     {
-                        <option id="@mes" name="@mes" value="@mes">@mes</option>
+                        <option value="@contador">@mes</option>
+                        contador = contador + 1;
                     }
                 }
             </select>
@@ -152,27 +156,22 @@
             var checkboxes = document.querySelectorAll('input[name="Servicios"]:checked');
             var list = [];
 
-            //$.each($("input[name='Servicios']:checked"), function () {
-            //    list.push($(this).val());
-            //});
+            $.each($("input[name='Servicios']:checked"), function () {
+                list.push($(this).val());
+            });
 
-            for (var i = 0, n = checkboxes.length; i < n; i++) {
-
-                list.push(checkboxes[i].value);
-            }
             console.log(list);
-
-            
 
             return list;
         }
 
         function guardar() {
+
             var dataCobro = {
-                IdCliente: $("#IdCliente").val(),
+                IdCobro: $("#IdCobro").val(),
                 IdCasa: $("#IdCasa").val(),
-                Anno: $("#Anno").val(),
-                Mes: $("#Mes").val()
+                anno: $("#Anno").val(),
+                mes: $("#Mes").val() 
             };
 
             var dataServicios = obtCheckboxes();

@@ -58,7 +58,7 @@ namespace G03_Sistema_Condominios.Controllers
         }
 
         [HttpPost]
-        public JsonResult CrearModificarCobro(Cobro cobro, List<string> servicios)
+        public JsonResult CrearModificarCobro(ModelCobro cobro, List<string> servicios)
         {
 
             //Se instacia el cobroView nuevamente
@@ -68,29 +68,30 @@ namespace G03_Sistema_Condominios.Controllers
             cobroView.annos = new List<int>() { 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034 };
             cobroView.meses = new List<string>() { "Enero", "Febrero", "Marzo", "Mayo", "Abril", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
 
-            //Variables de cobro
-            //var idCasa = cobroView.Cobro.IdCasa;
-
+            //Se declaran variables para la inserción de servicios
+            var idServicio = 0;
 
             try
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
-                    //if (cobroView.Cobro.IdCobro == 0)
-                    //{
-                    //    db.SpCrearCobro(cobro.IdCasa, cobro.Mes, cobro.Anno);
-                    //}
-                    //else
-                    //{
-
-                    //}
-
-                    foreach (var id in servicios) 
+                    if (cobro.IdCobro == 0)
                     {
-                        @ViewBag.Prueba = id;
+                        db.SpCrearCobro(cobro.IdCasa, cobro.mes, cobro.anno);
+
+                        foreach (var id in servicios)
+                        {
+                            idServicio = int.Parse(id);
+                            db.SpAgregarServiciosCobro(idServicio);
+                        }
+
+                        db.SpActualizarMontoCobro(cobro.IdCasa);
+
                     }
+                    else
+                    {
 
-
+                    }
                     
                 }
             }

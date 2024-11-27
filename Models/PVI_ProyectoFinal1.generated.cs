@@ -108,6 +108,12 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
+		/// fk_id_casa_BackReference (dbo.Cobros)
+		/// </summary>
+		[Association(ThisKey="IdCasa", OtherKey="IdCasa", CanBeNull=true)]
+		public IEnumerable<Cobro> Fkidcasas { get; set; }
+
+		/// <summary>
 		/// fk_id_persona (dbo.Persona)
 		/// </summary>
 		[Association(ThisKey="IdPersona", OtherKey="IdPersona", CanBeNull=false)]
@@ -147,6 +153,12 @@ namespace DataModels
 		[Column("fecha_pagada"),    Nullable          ] public DateTime? FechaPagada { get; set; } // date
 
 		#region Associations
+
+		/// <summary>
+		/// fk_id_casa (dbo.Casas)
+		/// </summary>
+		[Association(ThisKey="IdCasa", OtherKey="IdCasa", CanBeNull=false)]
+		public Casa Fkidcasa { get; set; }
 
 		/// <summary>
 		/// fk_id_cobro_Bitacora_BackReference (dbo.Bitacora)
@@ -246,6 +258,34 @@ namespace DataModels
 
 	public static partial class PviProyectoFinalDBStoredProcedures
 	{
+		#region SpActualizarMontoCobro
+
+		public static int SpActualizarMontoCobro(this PviProyectoFinalDB dataConnection, int? @idCasa)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_casa", @idCasa, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpActualizarMontoCobro]", parameters);
+		}
+
+		#endregion
+
+		#region SpAgregarServiciosCobro
+
+		public static int SpAgregarServiciosCobro(this PviProyectoFinalDB dataConnection, int? @idServicio)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@idServicio", @idServicio, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpAgregarServiciosCobro]", parameters);
+		}
+
+		#endregion
+
 		#region SpAlterdiagram
 
 		public static int SpAlterdiagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId, int? @version, byte[] @definition)
