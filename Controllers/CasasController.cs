@@ -86,9 +86,23 @@ namespace G03_Sistema_Condominios.Controllers
                     }
                     else
                     {
-                        db.SpModificarCasa(casa.IdCasa,casa.NombreCasa,casa.MetrosCuadrados,casa.NumeroHabitaciones,casa.NumeroBanos,casa.IdPersona,casa.FechaConstruccion);
-                        resultado = "Se ha modificado la casa exitosamente";
-                        return View(casa);
+                        //verificar si la casa tiene servicio activos y cobros pendientes asociados 
+                        var cobrosPendientes = db.SpVerificarServiciosCobrosPendientes(casa.IdCasa).FirstOrDefault();
+
+                        if( cobrosPendientes != null && cobrosPendientes.Column1 == 1)
+                        {
+                            // Si hay servicios y cobros pendientes, se muestra un mensaje y no se realiza la operación
+                            ViewBag.Resultado = "La casa tiene servicios activos y/ cobros pendientes y no puede ser modificada.";
+                            ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
+                            return View(casa); // Vuelve a la misma vista con el mensaje
+                        }
+                        else
+                        {
+                            db.SpModificarCasa(casa.IdCasa, casa.NombreCasa, casa.MetrosCuadrados, casa.NumeroHabitaciones, casa.NumeroBanos, casa.IdPersona, casa.FechaConstruccion);
+                            ViewBag.Resultado = "Se ha modificado la casa exitosamente";
+                            return View(casa);
+                        }
+                       
                     }
 
                    
