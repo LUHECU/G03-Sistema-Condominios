@@ -10,6 +10,7 @@ namespace G03_Sistema_Condominios.Models
     {
         public ModelCobro Cobro { get; set; }
         public List<SpConsultarServiciosResult> Servicios { get; set; }
+        public List<SpConsultarDetallePorIdCobroResult> DetalleCobro { get; set; }
         public List<int> annos { get; set; }
         public List<string> meses { get; set; }
         public List<string> CheckedServicios { get; set; }

@@ -32,6 +32,7 @@
                 <td>@co.Persona</td>
                 <td>@co.Mes - @co.Anno</td>
                 <td>@co.Estado</td>
+                <td> @Html.ActionLink("Modificar", "CrearModificarCobro", "Cobro", new { idCobro = co.Id_cobro }, new { @class = "btn btn-primary" })</td>
             </tr>
         }
     }

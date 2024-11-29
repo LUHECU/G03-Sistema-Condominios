@@ -29,10 +29,11 @@ namespace G03_Sistema_Condominios.Controllers
             return View(list);
         }
 
-        public ActionResult CrearModificarCobro(int? id) 
+        public ActionResult CrearModificarCobro(int? idCobro) 
         {
             var cobro = new ModelCobro();
             var servicios = new List<SpConsultarServiciosResult>();
+            var detalleCobro = new List<SpConsultarDetallePorIdCobroResult>();
             var cobroView = new ModelCobroView();
 
             //Se cargan las listas de meses y años
@@ -46,9 +47,18 @@ namespace G03_Sistema_Condominios.Controllers
                 using(var db = new PviProyectoFinalDB("MyDatabase"))
                 {
 
-                    cobro = db.SpConsultarCobroPorId(id).Select(_ => new ModelCobro{ }).FirstOrDefault();
+                    cobro = db.SpConsultarCobroPorId(idCobro).Select(_ => new ModelCobro{
+                        IdCobro = _.Id_cobro,
+                        IdCasa = _.Id_casa,
+                        IdPersona = _.Id_persona,
+                        mes = _.Mes,
+                        anno = _.Anno
+                    }).FirstOrDefault();
 
+                    detalleCobro = db.SpConsultarDetallePorIdCobro(idCobro).ToList();
                     servicios = db.SpConsultarServicios().ToList();
+
+                    cobroView.DetalleCobro = detalleCobro;
                     cobroView.Servicios = servicios;
                     cobroView.Cobro = cobro;
 
@@ -84,15 +94,23 @@ namespace G03_Sistema_Condominios.Controllers
                         foreach (var id in servicios)
                         {
                             idServicio = int.Parse(id);
-                            db.SpAgregarServiciosCobro(idServicio);
+                            db.SpAgregarServiciosCobro(idServicio, 0);
                         }
 
-                        db.SpActualizarMontoCobro(cobro.IdCasa);
+                        db.SpActualizarMontoCobro(cobro.IdCasa, 0);
 
                     }
                     else
                     {
+                        db.SpRestaurarDetalleCobroPorIdCobro(cobro.IdCobro);
 
+                        foreach (var id in servicios)
+                        {
+                            idServicio = int.Parse(id);
+                            db.SpAgregarServiciosCobro(idServicio, cobro.IdCobro);
+                        }
+
+                        db.SpActualizarMontoCobro(cobro.IdCasa, cobro.IdCobro);
                     }
                     
                 }
