@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using G03_Sistema_Condominios.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +14,20 @@ namespace G03_Sistema_Condominios.Controllers
         // GET: Cobro
         public ActionResult Index()
         {
-            var list = new List<SpConsultarCobrosResult>();
+            var cobroView = new LoginCobros();
+            List<SpConsultarCobrosResult> list = new List<SpConsultarCobrosResult>();
             try
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
                     list = db.SpConsultarCobros().ToList();
-
+                    //cobroView
                 }
             }
             catch { }
-            return View(list);
-
+            return View();
         }
+
     }
+
 }

@@ -15,38 +15,44 @@ namespace G03_Sistema_Condominios.Controllers
         // GET: Login
         public ActionResult Login()
         {
-           
             return View();
         }
+
         // POST: Account/Login
         [HttpPost]
-        [ValidateAntiForgeryToken]
+  
         public ActionResult Login(Login model)
-
         {
-            if (ModelState.IsValid)
-            {
-                using (var db = new PviProyectoFinalDB("MyDatabase"))
+           
+                try
                 {
-                    var user = db.SpLogin(model.Email, model.Password).FirstOrDefault();
-                                 
-                    if (user != null)
+                    using (var db = new PviProyectoFinalDB("MyDatabase"))
                     {
-                        // Guardar la información del usuario en la sesión
-                        Session["UserName"]=user.Nombre + " " + user.Apellido;
-                        Session["UserId"] = user.IdPersona;
-                        Session["UserTipo"]=user.TipoPersona;
+                        var user = db.SpLogin(model.Email, model.Password).FirstOrDefault();
 
-                        
-                        // Redireccionar a la página principal
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Correo electrónico o contraseña incorrectos.");
+                        if (user != null)
+                        {
+                            // Guardar la información del usuario en la sesión
+                            Session["UserName"] = user.Nombre + " " + user.Apellido;
+                            Session["UserId"] = user.IdPersona;
+                            Session["UserTipo"] = user.TipoPersona;
+
+                            // Redireccionar a la página principal
+                            return RedirectToAction("Index", "Cobro");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Correo electrónico o contraseña incorrectos.");
+                        }
                     }
                 }
-            }
+                catch (Exception ex)
+                {
+                 
+                }
+            
+
+           
             return View(model);
         }
 
@@ -54,7 +60,7 @@ namespace G03_Sistema_Condominios.Controllers
         public ActionResult Logout()
         {
             Session.Clear();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "Login");
         }
     }
 }
