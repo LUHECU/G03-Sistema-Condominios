@@ -1,0 +1,58 @@
+﻿@model G03_Sistema_Condominios.Models.LoginCobros
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Inicio de Sesión</h2>
+
+<form method="post" id="LoginForm">
+    <div class="col-md-10">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
+    <div class="col-md-10">
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+    </div>
+
+    <div class="col-md-10">
+        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
+    <div class="col-md-10">
+        @Html.TextBoxFor(model => model.Password, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Ingresar" class="btn btn-dark" />
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $.validator.addMethod("password", function (value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9!#$%^&*()_+]{4,12}$/.test(value);
+        }, "La contraseña debe tener entre 4 y 12 caracteres y puede incluir letras, números y caracteres especiales.");
+
+        $("#LoginForm").validate({
+            rules: {
+                "Email": { required: true, email: true, minlength: 1, maxlength: 50 },
+                "Password": { required: true, password: true, minlength: 4, maxlength: 12 }
+            },
+            messages: {
+                "Email": {
+                    required: "Por favor, ingrese su correo electrónico.",
+                    email: "Por favor, ingrese un correo electrónico válido.",
+                    minlength: "El correo electrónico debe tener al menos 1 carácter.",
+                    maxlength: "El correo electrónico no debe exceder los 50 caracteres."
+                },
+                "Password": {
+                    required: "Por favor, ingrese su contraseña.",
+                    minlength: "La contraseña debe tener al menos 4 caracteres.",
+                    maxlength: "La contraseña no debe exceder los 12 caracteres."
+                }
+            }
+        });
+    </script>
+}
