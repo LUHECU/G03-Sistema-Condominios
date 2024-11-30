@@ -1,40 +1,57 @@
 ﻿@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosResult>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Cobros";
 }
 
-<h2>Index</h2>
+<h2>Lista de Cobros</h2>
 
+<h3>@Html.Raw(Session["UserName"])</h3>
 
-
-<div>
-
-    <div class="my-4">
-        @Html.ActionLink("Nuevo cobro", "CrearModificarCobro", "Cobro", new { }, new { @class = "btn btn-primary" })
+<div class="row">
+    <div class="col-md-3">
+        <form id="filterForm">
+            <div class="form-group">
+                <label for="propietario">Propietario:</label>
+                @Html.DropDownList("propietario", (SelectList)ViewBag.Clientes, "Seleccione un cliente", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="estado">Estado:</label>
+                <input type="text" id="estado" name="estado" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="mes">Mes:</label>
+                <input type="number" id="mes" name="mes" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="anno">Año:</label>
+                <input type="number" id="anno" name="anno" class="form-control" />
+            </div>
+            <button type="button" class="btn btn-primary" onclick="filtrarCobros()">Filtrar</button>
+        </form>
     </div>
-
-    <table class="table table-hover table-bordered">
-        <tr class="text-center">
-            <th># Cobro</th>
-            <th># Casa</th>
-            <th># Propietario</th>
-            <th>Periodo</th>
-            <th>Estado</th>
-        </tr>
-        @{
-            foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosResult co in this.Model)
-            {
-                <tr class="text-center">
-                    <td>@co.Id_cobro</td>
-                    <td>@co.Nombre_casa</td>
-                    <td>@co.Persona</td>
-                    <td>@co.Mes - @co.Anno</td>
-                    <td>@co.Estado</td>
-                </tr>
-            }
-        }
-    </table>
-
-
+    <div class="col-md-9">
+        <div id="cobrosTable">
+            @Html.Partial("_CobrosTable", Model)
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        function filtrarCobros() {
+            $.ajax({
+                url: '@Url.Action("FiltrarCobros", "Cobro")',
+                type: 'POST',
+                data: $('#filterForm').serialize(),
+                success: function (result) {
+                    $('#cobrosTable').html(result);
+                },
+                error: function (xhr, status, error) {
+                    alert('Ocurrió un error al filtrar los cobros: ' + error);
+                }
+            });
+        }
+    </script>
+}
