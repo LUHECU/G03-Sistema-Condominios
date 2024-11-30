@@ -1,0 +1,88 @@
+﻿@model G03_Sistema_Condominios.Models.ModelCobroView
+
+
+@{
+    ViewBag.Title = "DetalleCobro";
+}
+
+<h2>Detalle del cobro</h2>
+
+<div>
+    <div>
+        <table class="table table-bordered border-secondary border-opacity-50 w-25">
+            <tr>
+                <td class="bg-secondary bg-opacity-25 fw-bold"># Cobro</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 fw-bold">Propietario</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 fw-bold">Nombre casa</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 fw-bold">Monto cobro</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 fw-bold">Precio casa</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 fw-bold">Periodo</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 fw-bold">Estado</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="Servicios">Servicios</label>
+
+        @{
+            var validador = false;
+
+            foreach (var servicio in this.Model.Servicios)
+            {
+                if (servicio.Estado)
+                {
+                    if (this.Model.Cobro != null)
+                    {
+                        foreach (var detalleCobro in this.Model.DetalleCobro)
+                        {
+                            if (detalleCobro.Id_servicio == servicio.Id_servicio)
+                            {
+                                <div>
+                                    <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" checked disabled/>
+                                    <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
+                                </div>
+
+                                validador = true;
+                            }
+                        }
+
+                    }
+
+                    if (!validador)
+                    {
+                        <div>
+                            <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" disabled/>
+                            <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
+                        </div>
+                    }
+
+                    validador = false;
+                }
+
+            }
+        }
+
+    </div>
+
+</div>
+

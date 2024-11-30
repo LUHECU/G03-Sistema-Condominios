@@ -258,12 +258,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CobroController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Dropdown.cs" />
     <Compile Include="Models\ModelCobro.cs" />
     <Compile Include="Models\ModelCobroView.cs" />
+    <Compile Include="Models\ModelLogin.cs" />
     <Compile Include="Models\PVI_ProyectoFinal1.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -347,6 +349,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Cobro\Index.cshtml" />
     <Content Include="Views\Cobro\CrearModificarCobro.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Cobro\DetalleCobro.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

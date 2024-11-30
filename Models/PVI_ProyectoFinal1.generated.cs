@@ -705,6 +705,27 @@ namespace DataModels
 
 		#endregion
 
+		#region SpLogin
+
+		public static IEnumerable<Persona> SpLogin(this PviProyectoFinalDB dataConnection, string @Email, string @contrasena)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@Email",      @Email,      LinqToDB.DataType.VarChar)
+				{
+					Size = 150
+				},
+				new DataParameter("@contrasena", @contrasena, LinqToDB.DataType.VarChar)
+				{
+					Size = 15
+				}
+			};
+
+			return dataConnection.QueryProc<Persona>("[dbo].[spLogin]", parameters);
+		}
+
+		#endregion
+
 		#region SpPagarCobroMensualidades
 
 		public static int SpPagarCobroMensualidades(this PviProyectoFinalDB dataConnection, int? @idCobro, int? @idUser)

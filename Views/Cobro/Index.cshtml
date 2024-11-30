@@ -1,11 +1,11 @@
 ﻿
-@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosResult>
+@model G03_Sistema_Condominios.Models.ModelCobroView
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Gestionar Cobros</h2>
 
 
 
@@ -17,25 +17,48 @@
 
     <table class="table table-hover table-bordered">
         <tr class="text-center">
-            <th ># Cobro</th>
+            <th># Cobro</th>
             <th># Casa</th>
             <th># Propietario</th>
             <th>Periodo</th>
             <th>Estado</th>
         </tr>
-    @{
-        foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosResult co in this.Model)
-        {
-            <tr class="text-center">
-                <td>@co.Id_cobro</td>
-                <td>@co.Nombre_casa</td>
-                <td>@co.Persona</td>
-                <td>@co.Mes - @co.Anno</td>
-                <td>@co.Estado</td>
-                <td> @Html.ActionLink("Modificar", "CrearModificarCobro", "Cobro", new { idCobro = co.Id_cobro }, new { @class = "btn btn-primary" })</td>
-            </tr>
+        @{
+
+            if (Session["UserTipo"].Equals("Empleado"))
+            {
+                foreach (var co in this.Model.CobrosList)
+                {
+                    <tr class="text-center">
+                        <td>@co.Id_cobro</td>
+                        <td>@co.Nombre_casa</td>
+                        <td>@co.Persona</td>
+                        <td>@co.Mes - @co.Anno</td>
+                        <td>@co.Estado</td>
+                        <td> @Html.ActionLink("Modificar", "DetalleCobro", "Cobro", new { idCobro = co.Id_cobro }, new { @class = "btn btn-primary" })</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                foreach (var co in this.Model.CobrosClienteList)
+                {
+                    <tr class="text-center">
+                        <td>@co.Id_cobro</td>
+                        <td>@co.Nombre_casa</td>
+                        <td>@co.Persona</td>
+                        <td>@co.Mes - @co.Anno</td>
+                        <td>@co.Estado</td>
+                        <td> @Html.ActionLink("Modificar", "DetalleCobro", "Cobro", new { idCobro = co.Id_cobro }, new { @class = "btn btn-primary" })</td>
+                    </tr>
+                }
+            }
+
+
+
+
+
         }
-    }
     </table>
 
 

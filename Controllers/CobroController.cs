@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using static DataModels.PviProyectoFinalDBStoredProcedures;
 using G03_Sistema_Condominios.Models;
 using DataModels;
+using System.Drawing;
 
 namespace G03_Sistema_Condominios.Controllers
 {
@@ -15,22 +16,92 @@ namespace G03_Sistema_Condominios.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            var list = new List<SpConsultarCobrosResult>();
+            //Verificador de inicio de sesión
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+
+            //Variables de modelos
+            LoginController login = new LoginController();
+            ModelCobroView cobroView = new ModelCobroView();
+            var listCobros = new List<SpConsultarCobrosResult>();
+            var listCobrosCliente = new List<SpConsultarCobroPorClienteResult>();
+
+            //Variables de sesión
+            var idUsuario = (Session["UserId"] != null)? (int)Session["UserId"] : 0;
+            var tipoUsuario = (Session["UserTipo"] != null)? Session["UserTipo"].ToString() : "";
+            var nombreUsuario = (Session["UserName"] != null)? Session["UserName"].ToString() : "";
+
             try
             {
                 using(var db = new PviProyectoFinalDB("MyDatabase"))
                 {
-                    list = db.SpConsultarCobros().ToList();
+
+                    if (tipoUsuario.Equals("Empleado"))
+                    {
+                        listCobros = db.SpConsultarCobros().ToList();
+                        cobroView.CobrosList = listCobros;
+                    }
+                    else 
+                    {
+                        listCobrosCliente = db.SpConsultarCobroPorCliente(idUsuario).ToList();
+                        cobroView.CobrosClienteList = listCobrosCliente;
+                    }
                     
                 }
+                
             }
             catch{ }
 
-            return View(list);
+            return View(cobroView);
+        }
+
+        public ActionResult DetalleCobro(int? idCobro) 
+        {
+
+            //Verificador de inicio de sesión
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+
+            var cobro = new ModelCobro();
+            var servicios = new List<SpConsultarServiciosResult>();
+            var detalleCobro = new List<SpConsultarDetallePorIdCobroResult>();
+            var cobroView = new ModelCobroView();
+
+            using (var db = new PviProyectoFinalDB("MyDatabase"))
+            {
+
+                cobro = db.SpConsultarCobroPorId(idCobro).Select(_ => new ModelCobro
+                {
+                    IdCobro = _.Id_cobro,
+                    IdCasa = _.Id_casa,
+                    IdPersona = _.Id_persona,
+                    mes = _.Mes,
+                    anno = _.Anno
+                }).FirstOrDefault();
+
+                detalleCobro = db.SpConsultarDetallePorIdCobro(idCobro).ToList();
+                servicios = db.SpConsultarServicios().ToList();
+
+                cobroView.DetalleCobro = detalleCobro;
+                cobroView.Servicios = servicios;
+                cobroView.Cobro = cobro;
+
+            }
+            return View(cobroView);
         }
 
         public ActionResult CrearModificarCobro(int? idCobro) 
         {
+            //Verificador de inicio de sesión
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+
             var cobro = new ModelCobro();
             var servicios = new List<SpConsultarServiciosResult>();
             var detalleCobro = new List<SpConsultarDetallePorIdCobroResult>();
