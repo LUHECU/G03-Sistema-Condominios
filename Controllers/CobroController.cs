@@ -77,10 +77,12 @@ namespace G03_Sistema_Condominios.Controllers
                 cobro = db.SpConsultarCobroPorId(idCobro).Select(_ => new ModelCobro
                 {
                     IdCobro = _.Id_cobro,
-                    IdCasa = _.Id_casa,
-                    IdPersona = _.Id_persona,
+                    Persona = _.Persona,
+                    NumCasa = _.Nombre_casa,
+                    monto = _.Monto,
                     mes = _.Mes,
-                    anno = _.Anno
+                    anno = _.Anno,
+                    estado = _.Estado
                 }).FirstOrDefault();
 
                 detalleCobro = db.SpConsultarDetallePorIdCobro(idCobro).ToList();
