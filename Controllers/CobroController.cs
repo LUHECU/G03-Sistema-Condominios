@@ -53,7 +53,7 @@ namespace G03_Sistema_Condominios.Controllers
 
         // Acción para filtrar cobros de manera asíncrona
         [HttpPost]
-        public ActionResult FiltrarCobros(string propietario, string estado, int? mes, int? anno)
+        public ActionResult FiltrarCobros(int? propietario, string estado, int? mes, int? anno)
         {
             List<SpConsultarCobrosResult> list = new List<SpConsultarCobrosResult>();
             try
@@ -63,9 +63,9 @@ namespace G03_Sistema_Condominios.Controllers
                     list = db.SpConsultarCobros().ToList();
 
                     // Aplicar filtros
-                    if (!string.IsNullOrEmpty(propietario))
+                    if (propietario.HasValue)
                     {
-                        list = list.Where(c => c.Persona.Contains(propietario)).ToList();
+                        list = list.Where(c => c.Id_persona == propietario).ToList();
                     }
                     if (!string.IsNullOrEmpty(estado))
                     {
