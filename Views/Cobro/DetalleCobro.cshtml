@@ -1,0 +1,110 @@
+﻿@model G03_Sistema_Condominios.Models.ModelCobroView
+
+
+@{
+    ViewBag.Title = "DetalleCobro";
+}
+
+<h2>Detalle del cobro</h2>
+
+<div>
+    <div>
+        <table class="table table-bordered border-secondary w-25">
+            <tr>
+                <td class="bg-secondary bg-opacity-25 "># Cobro</td>
+                <td>@this.Model.Cobro.IdCobro</td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 ">Propietario</td>
+                <td>@this.Model.Cobro.Persona</td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 ">Nombre casa</td>
+                <td>@this.Model.Cobro.NumCasa</td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 ">Monto cobro</td>
+                <td>@this.Model.Cobro.monto</td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 ">Precio casa</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 ">Periodo</td>
+                <td>@this.Model.Cobro.mes - @this.Model.Cobro.anno</td>
+            </tr>
+            <tr>
+                <td class="bg-secondary bg-opacity-25 ">Estado</td>
+                <td>@this.Model.Cobro.estado</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-secondary" for="Servicios">Servicios</label>
+
+        @{
+            var validador = false;
+
+            foreach (var servicio in this.Model.Servicios)
+            {
+                if (servicio.Estado)
+                {
+                    if (this.Model.Cobro != null)
+                    {
+                        foreach (var detalleCobro in this.Model.DetalleCobro)
+                        {
+                            if (detalleCobro.Id_servicio == servicio.Id_servicio)
+                            {
+                                <div>
+                                    <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" checked disabled/>
+                                    <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
+                                </div>
+
+                                validador = true;
+                            }
+                        }
+
+                    }
+
+                    if (!validador)
+                    {
+                        <div>
+                            <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" disabled/>
+                            <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
+                        </div>
+                    }
+
+                    validador = false;
+                }
+
+            }
+        }
+
+    </div>
+
+    <div>
+        <span>@Html.ActionLink("Editar", "CrearModificarCobro", "Cobro", new { idCobro = this.Model.Cobro.IdCobro }, new { @class = "btn btn-primary" })</span>
+        <span>@Html.ActionLink("Pagar", "", "", new { }, new { @class = "btn btn-success" })</span>
+        <span>@Html.ActionLink("Eliminar", "", "", new { }, new { @class = "btn btn-danger" })</span>
+        <span class="mx-3">@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
+    </div>
+
+    <div class="mt-3">
+        <h3>Lista de acciones realizadas</h3>
+
+        <table class="table table-bordered border-dark w-50 text-center">
+            <tr class="bg-dark bg-opacity-50  text-light">
+                <th>Fecha</th>
+                <th>Acción</th>
+                <th>Realizado por</th>
+            </tr>
+
+        </table>
+
+    </div>
+
+
+</div>
+

@@ -1,0 +1,299 @@
+﻿@model G03_Sistema_Condominios.Models.ModelCobroView
+
+@{
+    ViewBag.Title = "CrearModificarCobro";
+}
+
+
+
+
+<div class="mt-4">
+
+    <form method="post" id="FormCobro">
+
+        <input type="hidden" id="IdCobro" name="IdCobro"/>
+
+        <div class="mb-3">
+            <label class="form-label" for="IdCliente">Cliente</label>
+            @{ 
+                if(this.Model.Cobro != null)
+                {
+                    <select id="IdCliente" name="IdCliente" class="form-control" disabled></select>
+                }
+                else 
+                { 
+                    <select id="IdCliente" name="IdCliente" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                    </select>
+                }
+            }
+            
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="IdCasa">Casa</label>
+            @{
+                if (this.Model.Cobro != null)
+                {
+                    <select id="IdCasa" name="IdCasa" class="form-control" disabled></select>
+                }
+                else
+                {
+                    <select id="IdCasa" name="IdCasa" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                    </select>
+                }
+            }
+            
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="Anno">Año</label>
+
+            @{
+
+                var a = (this.Model.Cobro != null) ? this.Model.Cobro.anno : 0;
+
+
+                if (this.Model.Cobro != null)
+                {
+                    <select id="Anno" name="Anno" class="form-control" disabled>
+                        <option value="@a" selected>@a</option>
+                    </select>
+                }
+                else
+                {
+                    <select id="Anno" name="Anno" class="form-control">
+                        <option value="">Seleccione una opción</option>
+
+                        @foreach (var anno in this.Model.annos)
+                        {
+                        <option value="@anno">@anno</option>
+
+                        }
+                    </select>
+
+                }
+            }
+
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="Mes">Mes</label>
+
+            @{
+                var contador = 1;
+                var m = (this.Model.Cobro != null) ? this.Model.Cobro.mes : 0;
+
+                if (m != 0)
+                {
+                    <select id="Mes" name="Mes" class="form-control" disabled>
+                        @foreach (var mes in this.Model.meses){
+                            if (contador == m)
+                            {
+                                <option value="@contador" selected>@mes</option>
+                            }
+
+                            contador = contador + 1;
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select id="Mes" name="Mes" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        @foreach (var mes in this.Model.meses)
+                        {
+                            <option value="@contador">@mes</option>
+
+                            contador = contador + 1;
+                        }
+                    </select>
+                }
+
+
+            }
+
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="Servicios">Servicios</label>
+
+            @{
+                var validador = false;
+
+                foreach (var servicio in this.Model.Servicios)
+                {
+                    if (servicio.Estado)
+                    {
+                        if (this.Model.Cobro != null)
+                        {
+                            foreach (var detalleCobro in this.Model.DetalleCobro)
+                            {
+                                if (detalleCobro.Id_servicio == servicio.Id_servicio)
+                                {
+                                    <div>
+                                        <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" checked />
+                                        <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
+                                    </div>
+
+                                    validador = true;
+                                }
+                            }
+
+                        }
+
+                        if(!validador)
+                        {
+                            <div>
+                                <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" />
+                                <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
+                            </div>
+                        }
+
+                        validador = false;
+                    }
+
+                }
+            }
+
+        </div>
+
+        <div>
+            
+            <span><input type="submit" class="btn btn-primary" value="Guardar" /></span>
+            <span>@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
+        </div>
+
+    </form>
+
+
+
+    <div class="mt-5">
+        @ViewBag.Prueba
+    </div>
+
+</div>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/validacionesGenericas.js"></script>
+    <script type="text/javascript">
+        $("#FormCobro").validate({
+            rules: {
+                'IdCliente': {
+                    required: true
+                },
+                'IdCasa': {
+                    required: true
+                },
+                'Anno': {
+                    required: true
+                },
+                'Mes': {
+                    required: true
+                },
+                'Servicios': {
+                    required: true
+                }
+            },
+             submitHandler: function (form) {
+                guardar();
+            }
+
+
+        });
+
+        function loadDropdown(url, parametros, ddl, selected) {
+            $.ajax({
+                url: url,
+                datatype: 'json',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(parametros),
+                success: function (data) {
+                    ddl.empty();
+                    ddl.append("<option value=''>Seleccione una opción</option>");
+                    $(data).each(function () {
+                        var option = new Option(this.Nombre, this.Id);
+                        if (this.Id == selected) {
+                            option.selected = true;
+                        }
+                        ddl.append(option);
+                    });
+
+                },
+                error: function (jQxhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        };
+
+        function setChanges() {
+            $("#IdCliente").change(function () {
+                loadDropdown("/Cobro/Casas", { idCliente: $("#IdCliente").val() }, $("#IdCasa"));
+            });
+        };
+
+        function obtCheckboxes() {
+
+            var checkboxes = document.querySelectorAll('input[name="Servicios"]:checked');
+            var list = [];
+
+            $.each($("input[name='Servicios']:checked"), function () {
+                list.push($(this).val());
+            });
+
+            console.log(list);
+
+            return list;
+        }
+
+        function cargar()
+        {
+            var IdCobro = @((this.Model.Cobro != null) ? this.Model.Cobro.IdCobro : 0);
+            console.log(IdCobro);
+
+            if (IdCobro != 0) {
+                $("#IdCobro").val(IdCobro);
+            }
+
+        }
+
+        function guardar() {
+
+            var dataCobro = {
+                IdCobro: $("#IdCobro").val(),
+                IdCasa: $("#IdCasa").val(),
+                anno: $("#Anno").val(),
+                mes: $("#Mes").val()
+            };
+
+            var dataServicios = obtCheckboxes();
+
+            console.log(dataCobro);
+
+            $.post("/Cobro/CrearModificarCobro", { cobro: dataCobro, servicios: dataServicios }, function (data) {
+                alert(data); location.reload();
+            });
+
+        }
+
+        $(document).ready(function () {
+
+            var idCliente = @((this.Model.Cobro != null) ? this.Model.Cobro.IdPersona : 0);
+            var idCasa = @((this.Model.Cobro != null) ? this.Model.Cobro.IdCasa : 0);
+
+
+            loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"), idCliente);
+            if (idCasa != 0) {
+                loadDropdown("/Cobro/Casas", { idCliente: idCliente}, $("#IdCasa"), idCasa);
+            }
+            cargar();
+            setChanges();
+            obtCheckboxes();
+        });
+
+    </script>
+}
