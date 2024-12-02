@@ -63,9 +63,8 @@ namespace G03_Sistema_Condominios.Controllers
                     // Verifica si la casa existe al colocar un ID por el url
                     if (casa == null)
                     {
-                        ViewBag.Resultado = "La casa no existe, por favor cree la casa nueva";
-                        ViewBag.Clientes = db.SpConsultarClientesActivos().ToList(); // Carga nuevamente los datos de clientes
-                        return View(casa); // Devuelve la vista con el mensaje
+                        TempData["Resultado"] = "La casa no existe, por favor cree la nueva casa.";
+                        return RedirectToAction("Index"); // Redirige a Index
                     }
 
                     // Si la casa está inactiva, muestra un mensaje y redirige a otra página

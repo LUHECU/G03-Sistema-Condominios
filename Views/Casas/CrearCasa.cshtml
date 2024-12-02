@@ -14,114 +14,115 @@ else
 
 @*Que se muestre el mensaje de exito o error*@
 @*@if (this.Model != null || this.Model == null)*@
-@if (!string.IsNullOrEmpty(ViewBag.Resultado))
-{
-    <div class="alert alert-warning">
-        @ViewBag.Resultado
-    </div>
-}
+    @if (!string.IsNullOrEmpty(ViewBag.Resultado))
+    {
+        <div class="alert alert-warning">
+            @ViewBag.Resultado
+        </div>
+    }
 
-<form method="post" id="myform">
 
-    @Html.HiddenFor(model => model.IdCasa)
+    <form method="post" id="myform">
 
-    <div class="mb-3">
-        <label class="form-label">Nombre de la Casa: </label>
-        @if (this.Model == null)
-        {
-            @Html.TextBoxFor(model => model.NombreCasa, new { @class = "form-control" })
-        }
-        else
-        {
-            @Html.TextBoxFor(model => model.NombreCasa, new { @class = "form-control", @readonly = "readonly" })
-        }
-    </div>
+        @Html.HiddenFor(model => model.IdCasa)
 
-    <div class="mb-3">
-        <label class="form-label">Metros Cuadrados: </label>
-        @if (this.Model == null)
-        {
-            @Html.TextBoxFor(model => model.MetrosCuadrados, new { @class = "form-control" })
-        }
-        else
-        {
-            @Html.TextBoxFor(model => model.MetrosCuadrados, new { @class = "form-control", @readonly = "readonly" })
-        }
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Numero de Habitaciones: </label>
-        @Html.TextBoxFor(model => model.NumeroHabitaciones, new { @class = "form-control" })
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Numero de Baños: </label>
-        @Html.TextBoxFor(model => model.NumeroBanos, new { @class = "form-control" })
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Cliente: </label>
-        @if (ViewBag.Clientes != null && ViewBag.Clientes.Count > 0)
-        {
-            if (this.Model == null)
+        <div class="mb-3">
+            <label class="form-label">Nombre de la Casa: </label>
+            @if (this.Model == null)
             {
-                @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "Id_persona", "Cliente"), "Seleccione un dueño:", new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.NombreCasa, new { @class = "form-control" })
             }
             else
             {
-                @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "Id_persona", "Cliente"), "Seleccione un dueño:", new { @class = "form-control", disabled = "disabled" })
-                @Html.HiddenFor(model => model.IdPersona)
+                @Html.TextBoxFor(model => model.NombreCasa, new { @class = "form-control", @readonly = "readonly" })
             }
-        }
-    </div>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Fecha de Construcción: </label>
-        @if (this.Model == null)
-        {
-            @Html.TextBoxFor(model => model.FechaConstruccion, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @placeholder = "dd-MM-yyyy" })
-        }
-        else
-        {
-            @Html.TextBoxFor(model => model.FechaConstruccion, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @placeholder = "dd-MM-yyyy", @readonly = "readonly" })
-        }
-
-    </div>
-
-    <input type="submit" class="btn btn-primary" value="Guardar" />
-
-    @if (this.Model != null && this.Model.IdCasa != 0 && this.Model.Estado)
-    {
-        @Html.ActionLink("Inactivar", "InactivarCasa", "Casas", new { IdCasa = Model.IdCasa }, new { @class = "btn btn-danger" })
-    }
-
-    <a href="/Casas/Index" class="btn btn-secondary">Regresar</a>
-
-</form>
-
-
-@*Llamamos al jquery validation solo para esta pagina porque solo sirve en forms*@
-@section Scripts
-    {
-    @Scripts.Render("~/bundles/jqueryval") @*esta validación va a indicarle al usuario que cada campo es obligatorio*@
-    <script src="~/Scripts/validacionesGenericas.js"></script> @*esto le da estilos a los mensajes de las validaciones*@
-    <script type="text/javascript">
-
-        // Definir regla personalizada alphanumeric
-        $.validator.addMethod("alphanumeric", function (value, element) {
-            return this.optional(element) || /^[a-zA-Z0-9\s]+$/.test(value);
-        }, "Solo se permiten caracteres alfanuméricos.");
-
-        $("#myform").validate({
-            rules:
+        <div class="mb-3">
+            <label class="form-label">Metros Cuadrados: </label>
+            @if (this.Model == null)
             {
-                'NombreCasa': { required: true, alphanumeric: true, minlength: 1, maxlength: 50 },
-                'MetrosCuadrados': { required: true, number: true, min: 1, step: 0.01 },
-                'NumeroHabitaciones': { required: true, number: true, min: 1, max: 8, digits: true },
-                'NumeroBanos': { required: true, number: true, min: 1, max: 4, digits: true },
-                'IdPersona': { required: true },
-                'FechaConstruccion': { required: true, date: true },
+                @Html.TextBoxFor(model => model.MetrosCuadrados, new { @class = "form-control" })
             }
-        });
-    </script>
-}
+            else
+            {
+                @Html.TextBoxFor(model => model.MetrosCuadrados, new { @class = "form-control", @readonly = "readonly" })
+            }
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Numero de Habitaciones: </label>
+            @Html.TextBoxFor(model => model.NumeroHabitaciones, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Numero de Baños: </label>
+            @Html.TextBoxFor(model => model.NumeroBanos, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Cliente: </label>
+            @if (ViewBag.Clientes != null && ViewBag.Clientes.Count > 0)
+            {
+                if (this.Model == null)
+                {
+                    @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "Id_persona", "Cliente"), "Seleccione un dueño:", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.IdPersona, new SelectList(ViewBag.Clientes, "Id_persona", "Cliente"), "Seleccione un dueño:", new { @class = "form-control", disabled = "disabled" })
+                    @Html.HiddenFor(model => model.IdPersona)
+                }
+            }
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha de Construcción: </label>
+            @if (this.Model == null)
+            {
+                @Html.TextBoxFor(model => model.FechaConstruccion, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @placeholder = "dd-MM-yyyy" })
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.FechaConstruccion, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @placeholder = "dd-MM-yyyy", @readonly = "readonly" })
+            }
+
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Guardar" />
+
+        @if (this.Model != null && this.Model.IdCasa != 0 && this.Model.Estado)
+        {
+            @Html.ActionLink("Inactivar", "InactivarCasa", "Casas", new { IdCasa = Model.IdCasa }, new { @class = "btn btn-danger" })
+        }
+
+        <a href="/Casas/Index" class="btn btn-secondary">Regresar</a>
+
+    </form>
+
+
+    @*Llamamos al jquery validation solo para esta pagina porque solo sirve en forms*@
+    @section Scripts
+    {
+        @Scripts.Render("~/bundles/jqueryval") @*esta validación va a indicarle al usuario que cada campo es obligatorio*@
+        <script src="~/Scripts/validacionesGenericas.js"></script> @*esto le da estilos a los mensajes de las validaciones*@
+        <script type="text/javascript">
+
+            // Definir regla personalizada alphanumeric
+            $.validator.addMethod("alphanumeric", function (value, element) {
+                return this.optional(element) || /^[a-zA-Z0-9\s]+$/.test(value);
+            }, "Solo se permiten caracteres alfanuméricos.");
+
+            $("#myform").validate({
+                rules:
+                {
+                    'NombreCasa': { required: true, alphanumeric: true, minlength: 1, maxlength: 50 },
+                    'MetrosCuadrados': { required: true, number: true, min: 1, step: 0.01 },
+                    'NumeroHabitaciones': { required: true, number: true, min: 1, max: 8, digits: true },
+                    'NumeroBanos': { required: true, number: true, min: 1, max: 4, digits: true },
+                    'IdPersona': { required: true },
+                    'FechaConstruccion': { required: true, date: true },
+                }
+            });
+        </script>
+    }
