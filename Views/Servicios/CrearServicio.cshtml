@@ -87,12 +87,12 @@ else
 
 @*Que se muestre el mensaje de exito o error*@
 @*@if (this.Model != null || this.Model == null)*@
-@if (!string.IsNullOrEmpty(ViewBag.Resultado))
+@*@if (!string.IsNullOrEmpty(ViewBag.Resultado))
 {
     <div class="alert alert-warning">
         @ViewBag.Resultado
     </div>
-}
+}*@
 
 @*Llamamos al jquery validation solo para esta pagina porque solo sirve en forms*@
 @section Scripts
@@ -127,19 +127,6 @@ else
             this.value = this.value.replace(",", ".");
         });
 
-        //// Validar precio antes de enviar el formulario
-        //$("#myform").on("submit", function () {
-        //    var precio = $("input[name='Precio']").val();
-        //    if (!/^\d+(\.\d{1,2})?$/.test(precio)) {
-        //        alert("Por favor, ingresa un valor numérico válido para el precio con hasta 2 decimales.");
-        //        return false;
-        //    }
-        //});
-
-        //document.querySelector("[name='Precio']").addEventListener("input", function () {
-        //    this.value = this.value.replace(",", ".");
-        //});
-
         // Validate price format before form submission 
         $("#myform").on("submit", function () {
             var precio = $("input[name='Precio']").val();
@@ -148,20 +135,6 @@ else
                 return false;
             }
         });
-
-        //// Sobrescribir el método number para permitir coma como separador decimal
-        //$.validator.methods.number = function (value, element) {
-        //    return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:[.,]\d+)?$/.test(value);
-        //};
-
-        //// Redondear y reemplazar comas con puntos antes de enviar el formulario
-        //$('#Precio').on('blur', function () {
-        //    let value = $(this).val().replace(',', '.'); // Reemplaza coma por punto
-        //    let decimalValue = parseFloat(value);
-        //    if (!isNaN(decimalValue)) {
-        //        $(this).val(decimalValue.toFixed(2));
-        //    }
-        //});
 
     </script>
 }

@@ -45,23 +45,16 @@ namespace G03_Sistema_Condominios.Controllers
                         Estado = x.Estado
 
                     }).FirstOrDefault();
-
-                    //var serviceData = db.SpConsultarServiciosPorID(idServicio).FirstOrDefault();
-                    //ModelServicio servicio = null;
-                    //if (serviceData != null)
-                    //{
-                    //    servicio = new ModelServicio
-                    //    {
-                    //        IdServicio = serviceData.IdServicio,
-                    //        Nombre = serviceData.Nombre,
-                    //        Descripcion = serviceData.Descripcion,
-                    //        Precio = serviceData.Precio,
-                    //        IdCategoria = serviceData.IdCategoria,
-                    //        Estado = serviceData.Estado
-                    //    };
-                    //}
-
+                
                     ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
+
+                    // Verifica si el servicio existe al colocar un ID en el URL
+                    if (servicio == null)
+                    {
+                        ViewBag.Resultado = "el servicio no existe, por favor cree el nuevo servicio";
+                        ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList(); // Carga nuevamente los datos de las categorías
+                        return View(servicio); // Devuelve la vista con el mensaje
+                    }
 
                     // Si el servicio está inactivo, muestra un mensaje o redirige a otra página
                     if (servicio != null && !servicio.Estado)
@@ -87,34 +80,11 @@ namespace G03_Sistema_Condominios.Controllers
         {
             var resultado = string.Empty;
 
-            // Validar y convertir el precio
-            //try
+            //if (servicio.Precio == 0)
             //{
-            //    if (decimal.TryParse(servicio.Precio.ToString().Replace(",", "."), out var parsedPrice))
-            //    {
-            //        servicio.Precio = parsedPrice;
-            //    }
-            //    else
-            //    {
-            //        // Manejar el caso donde la conversión falla
-            //        ViewBag.Resultado = "El valor ingresado en el campo Precio no es válido.";
-            //       // ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
-            //        return View(servicio);
-            //    }
+            //    // Log para depurar
+            //    System.Diagnostics.Debug.WriteLine("El valor de Precio es: " + servicio.Precio);
             //}
-            //catch (Exception ex)
-            //{
-            //    // Capturar excepciones inesperadas durante la conversión
-            //    ViewBag.Resultado = $"Ocurrió un error al procesar el precio: {ex.Message}";
-            //    //ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
-            //    return View(servicio);
-            //}
-
-            if (servicio.Precio == 0)
-            {
-                // Log para depurar
-                System.Diagnostics.Debug.WriteLine("El valor de Precio es: " + servicio.Precio);
-            }
 
             try
             {
