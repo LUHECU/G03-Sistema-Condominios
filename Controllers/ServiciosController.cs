@@ -16,6 +16,12 @@ namespace G03_Sistema_Condominios.Controllers
         // GET: Servicios
         public ActionResult Index()
         {
+            //Verificador de inicio de sesión
+            //if (Session["UserId"] == null)
+            //{
+            //    return RedirectToAction("Login", "Login");
+            //}
+
             var list = new List<Servicio>();
             //recordar que es new nombre de la BD en SQL
             using (var db = new PviProyectoFinalDB("MyDatabase"))
@@ -29,6 +35,12 @@ namespace G03_Sistema_Condominios.Controllers
 
         public ActionResult CrearServicio(int? idServicio)
         {
+            //Verificador de inicio de sesión
+            //if (Session["UserId"] == null)
+            //{
+            //    return RedirectToAction("Login", "Login");
+            //}
+
             var servicio = new ModelServicio();  
 
            try

@@ -15,6 +15,12 @@ namespace G03_Sistema_Condominios.Controllers
         // GET: Casas
         public ActionResult Index()
         {
+            //Verificador de inicio de sesión
+            //if (Session["UserId"] == null)
+            //{
+            //    return RedirectToAction("Login", "Login");
+            //}
+
             var list = new List<SpConsultarCasasResult>();
             //recordar que es new nombre de la BD en SQL
             using (var db = new PviProyectoFinalDB("MyDatabase"))
@@ -27,6 +33,12 @@ namespace G03_Sistema_Condominios.Controllers
 
         public ActionResult CrearCasa(int? idCasa)
         {
+            //Verificador de inicio de sesión
+            //if (Session["UserId"] == null)
+            //{
+            //    return RedirectToAction("Login", "Login");
+            //}
+
             var casa = new ModelCasa();
 
            try
