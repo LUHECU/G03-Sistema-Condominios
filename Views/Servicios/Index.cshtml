@@ -1,4 +1,4 @@
-﻿@model List<DataModels.Servicio>
+﻿@model G03_Sistema_Condominios.Models.ModelCobroView
 @{
     ViewBag.Title = "Index";
 }
@@ -33,17 +33,17 @@
 
     @*Se hace un foreach para que podamos indicar nada mas una vez los rows y estos se vayan repitiendo automaticamente*@
     @{
-        foreach (var es in Model)
+        foreach (var es in this.Model.Servicios)
         {
             <tr>
-                <td>@es.IdServicio</td>
+                <td>@es.Id_servicio</td>
                 <td>@es.Nombre</td>
                 <td>@es.Descripcion</td>
                 <td>₡@string.Format("{0:N2}",es.Precio)</td>
-                <td>@es.IdCategoria</td>
+                <td>@es.Id_categoria</td>
                 <td>@(es.Estado ? "Activo" : "Inactivo")</td> 
                 <td>
-                    @Html.ActionLink("Modificar Servicio", "CrearServicio", "Servicios", new { IdServicio = es.IdServicio }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Modificar Servicio", "CrearServicio", "Servicios", new { IdServicio = es.Id_servicio }, new { @class = "btn btn-primary" })
                 </td>
             </tr>
         }

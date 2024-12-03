@@ -16,16 +16,20 @@ namespace G03_Sistema_Condominios.Controllers
         public ActionResult Index()
         {
             //Verificador de inicio de sesión
-            //if (Session["UserId"] == null)
-            //{
-            //    return RedirectToAction("Login", "Login");
-            //}
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+
+            var cobroView = new ModelCobroView();
 
             var list = new List<SpConsultarCasasResult>();
             //recordar que es new nombre de la BD en SQL
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
                 list = db.SpConsultarCasas().ToList();
+
+               // cobroView.Casas = list;
             }
             //pasamos la lista a la vista
             return View(list);
@@ -34,10 +38,10 @@ namespace G03_Sistema_Condominios.Controllers
         public ActionResult CrearCasa(int? idCasa)
         {
             //Verificador de inicio de sesión
-            //if (Session["UserId"] == null)
-            //{
-            //    return RedirectToAction("Login", "Login");
-            //}
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
 
             var casa = new ModelCasa();
 
@@ -61,11 +65,11 @@ namespace G03_Sistema_Condominios.Controllers
                     ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
 
                     // Verifica si la casa existe al colocar un ID por el url
-                    if (casa == null)
-                    {
-                        TempData["Resultado"] = "La casa no existe, por favor cree la nueva casa.";
-                        return RedirectToAction("Index"); // Redirige a Index
-                    }
+                    //if (casa == null)
+                    //{
+                    //    TempData["Resultado"] = "La casa no existe, por favor cree la nueva casa.";
+                    //    return RedirectToAction("Index"); // Redirige a Index
+                    //}
 
                     // Si la casa está inactiva, muestra un mensaje y redirige a otra página
                     if (casa != null && !casa.Estado)

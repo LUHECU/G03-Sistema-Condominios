@@ -258,6 +258,36 @@ namespace DataModels
 
 	public static partial class PviProyectoFinalDBStoredProcedures
 	{
+		#region SpActualizarMontoCobro
+
+		public static int SpActualizarMontoCobro(this PviProyectoFinalDB dataConnection, int? @idCasa, int? @idCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_casa",  @idCasa,  LinqToDB.DataType.Int32),
+				new DataParameter("@id_cobro", @idCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpActualizarMontoCobro]", parameters);
+		}
+
+		#endregion
+
+		#region SpAgregarServiciosCobro
+
+		public static int SpAgregarServiciosCobro(this PviProyectoFinalDB dataConnection, int? @idServicio, int? @idCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_Servicio", @idServicio, LinqToDB.DataType.Int32),
+				new DataParameter("@id_Cobro",    @idCobro,    LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpAgregarServiciosCobro]", parameters);
+		}
+
+		#endregion
+
 		#region SpAlterdiagram
 
 		public static int SpAlterdiagram(this PviProyectoFinalDB dataConnection, string @diagramname, int? @ownerId, int? @version, byte[] @definition)
@@ -436,7 +466,36 @@ namespace DataModels
 			[Column("id_casa")     ] public int       Id_casa      { get; set; }
 			[Column("nombre_casa") ] public string    Nombre_casa  { get; set; }
 			                         public string    Persona      { get; set; }
-			                         public int?      Periodo      { get; set; }
+			[Column("mes")         ] public int       Mes          { get; set; }
+			[Column("anno")        ] public int       Anno         { get; set; }
+			[Column("estado")      ] public string    Estado       { get; set; }
+			[Column("monto")       ] public decimal   Monto        { get; set; }
+			[Column("fecha_pagada")] public DateTime? Fecha_pagada { get; set; }
+		}
+
+		#endregion
+
+		#region SpConsultarCobroPorId
+
+		public static IEnumerable<SpConsultarCobroPorIdResult> SpConsultarCobroPorId(this PviProyectoFinalDB dataConnection, int? @idCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_cobro", @idCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpConsultarCobroPorIdResult>("[dbo].[SpConsultarCobroPorId]", parameters);
+		}
+
+		public partial class SpConsultarCobroPorIdResult
+		{
+			[Column("id_cobro")    ] public int       Id_cobro     { get; set; }
+			[Column("id_casa")     ] public int       Id_casa      { get; set; }
+			[Column("nombre_casa") ] public string    Nombre_casa  { get; set; }
+			[Column("id_persona")  ] public int       Id_persona   { get; set; }
+			                         public string    Persona      { get; set; }
+			[Column("mes")         ] public int       Mes          { get; set; }
+			[Column("anno")        ] public int       Anno         { get; set; }
 			[Column("estado")      ] public string    Estado       { get; set; }
 			[Column("monto")       ] public decimal   Monto        { get; set; }
 			[Column("fecha_pagada")] public DateTime? Fecha_pagada { get; set; }
@@ -456,8 +515,10 @@ namespace DataModels
 			[Column("id_cobro")    ] public int       Id_cobro     { get; set; }
 			[Column("id_casa")     ] public int       Id_casa      { get; set; }
 			[Column("nombre_casa") ] public string    Nombre_casa  { get; set; }
+			[Column("id_persona")  ] public int       Id_persona   { get; set; }
 			                         public string    Persona      { get; set; }
-			                         public int?      Periodo      { get; set; }
+			[Column("mes")         ] public int       Mes          { get; set; }
+			[Column("anno")        ] public int       Anno         { get; set; }
 			[Column("estado")      ] public string    Estado       { get; set; }
 			[Column("monto")       ] public decimal   Monto        { get; set; }
 			[Column("fecha_pagada")] public DateTime? Fecha_pagada { get; set; }
@@ -465,11 +526,41 @@ namespace DataModels
 
 		#endregion
 
+		#region SpConsultarDetallePorIdCobro
+
+		public static IEnumerable<SpConsultarDetallePorIdCobroResult> SpConsultarDetallePorIdCobro(this PviProyectoFinalDB dataConnection, int? @idCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@idCobro", @idCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.QueryProc<SpConsultarDetallePorIdCobroResult>("[dbo].[SpConsultarDetallePorIdCobro]", parameters);
+		}
+
+		public partial class SpConsultarDetallePorIdCobroResult
+		{
+			[Column("id_servicio")] public int Id_servicio { get; set; }
+		}
+
+		#endregion
+
 		#region SpConsultarServicios
 
-		public static IEnumerable<Servicio> SpConsultarServicios(this PviProyectoFinalDB dataConnection)
+		public static IEnumerable<SpConsultarServiciosResult> SpConsultarServicios(this PviProyectoFinalDB dataConnection)
 		{
-			return dataConnection.QueryProc<Servicio>("[dbo].[SpConsultarServicios]");
+			return dataConnection.QueryProc<SpConsultarServiciosResult>("[dbo].[SpConsultarServicios]");
+		}
+
+		public partial class SpConsultarServiciosResult
+		{
+			[Column("id_servicio") ] public int     Id_servicio     { get; set; }
+			[Column("nombre")      ] public string  Nombre          { get; set; }
+			[Column("descripcion") ] public string  Descripcion     { get; set; }
+			[Column("precio")      ] public decimal Precio          { get; set; }
+			[Column("id_categoria")] public int     Id_categoria    { get; set; }
+			                         public string  NombreCategoria { get; set; }
+			[Column("estado")      ] public bool    Estado          { get; set; }
 		}
 
 		#endregion
@@ -506,6 +597,22 @@ namespace DataModels
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[SpCreaCasa]", parameters);
+		}
+
+		#endregion
+
+		#region SpCrearCobro
+
+		public static int SpCrearCobro(this PviProyectoFinalDB dataConnection, int? @idCasa, int? @mes, int? @anno)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@id_casa", @idCasa, LinqToDB.DataType.Int32),
+				new DataParameter("@mes",     @mes,    LinqToDB.DataType.Int32),
+				new DataParameter("@anno",    @anno,   LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpCrearCobro]", parameters);
 		}
 
 		#endregion
@@ -668,6 +775,27 @@ namespace DataModels
 
 		#endregion
 
+		#region SpLogin
+
+		public static IEnumerable<Persona> SpLogin(this PviProyectoFinalDB dataConnection, string @Email, string @contrasena)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@Email",      @Email,      LinqToDB.DataType.VarChar)
+				{
+					Size = 150
+				},
+				new DataParameter("@contrasena", @contrasena, LinqToDB.DataType.VarChar)
+				{
+					Size = 15
+				}
+			};
+
+			return dataConnection.QueryProc<Persona>("[dbo].[spLogin]", parameters);
+		}
+
+		#endregion
+
 		#region SpModificarCasa
 
 		public static int SpModificarCasa(this PviProyectoFinalDB dataConnection, int? @idCasa, string @NombreCasa, int? @MetrosCuadrados, int? @NumeroHabitaciones, int? @NumeroBanos, int? @idPersona, DateTime? @Fecha)
@@ -748,6 +876,20 @@ namespace DataModels
 			};
 
 			return dataConnection.ExecuteProc("[dbo].[sp_renamediagram]", parameters);
+		}
+
+		#endregion
+
+		#region SpRestaurarDetalleCobroPorIdCobro
+
+		public static int SpRestaurarDetalleCobroPorIdCobro(this PviProyectoFinalDB dataConnection, int? @idCobro)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@idCobro", @idCobro, LinqToDB.DataType.Int32)
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpRestaurarDetalleCobroPorIdCobro]", parameters);
 		}
 
 		#endregion

@@ -17,29 +17,33 @@ namespace G03_Sistema_Condominios.Controllers
         public ActionResult Index()
         {
             //Verificador de inicio de sesión
-            //if (Session["UserId"] == null)
-            //{
-            //    return RedirectToAction("Login", "Login");
-            //}
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
 
-            var list = new List<Servicio>();
+            var cobroView = new ModelCobroView();   
+
+            var list = new List<SpConsultarServiciosResult>();
             //recordar que es new nombre de la BD en SQL
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
                 list = db.SpConsultarServicios().ToList();
+
+                cobroView.Servicios = list;
             }
             //pasamos la lista a la vista
 
-            return View(list);
+            return View(cobroView);
         }
 
         public ActionResult CrearServicio(int? idServicio)
         {
             //Verificador de inicio de sesión
-            //if (Session["UserId"] == null)
-            //{
-            //    return RedirectToAction("Login", "Login");
-            //}
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
 
             var servicio = new ModelServicio();  
 
