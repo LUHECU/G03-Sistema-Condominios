@@ -58,38 +58,40 @@ namespace G03_Sistema_Condominios.Controllers
                         Estado = (bool)x.Estado
                     }).FirstOrDefault();
 
-                    if (Session["UserId"] != null)
+                    // Validación verificar si el usuario es el propietario de la casa a modificar/inactivar
+                    if (casa != null && casa.IdPersona == int.Parse(Session["UserId"].ToString()))
                     {
-                        // Obtiene el ID del usuario actual
-                        var userId = int.Parse(Session["UserId"].ToString());
-
-                        // Filtra la lista de clientes activos excluyendo al usuario actual
-                        var clientesActivos = db.SpConsultarClientesActivos()
-                                                .Where(cliente => cliente.Id_persona != userId)
-                                                .ToList();
-
-                        ViewBag.Clientes = clientesActivos;
+                        TempData["Resultado"] = "No puede modificar una casa de la que es propietario. Solicite a otro empleado realizar esta acción.";
+                        return RedirectToAction("Index");
                     }
 
+                    // Filtrar clientes activos excluyendo al usuario actual
+                    var userId = int.Parse(Session["UserId"].ToString());
+                    var clientesActivos = db.SpConsultarClientesActivos()
+                                            .Where(cliente => cliente.Id_persona != userId)
+                                            .ToList();
 
-                   // ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
-                   
-                    // Verifica si la casa existe al colocar un ID por el url
-                    //if (casa == null)
-                    //{
-                    //    TempData["Resultado"] = "La casa no existe, por favor cree la nueva casa.";
-                    //    return RedirectToAction("Index"); // Redirige a Index
-                    //}
+                    ViewBag.Clientes = clientesActivos;
+                }
 
-                    // Si la casa está inactiva, muestra un mensaje y redirige a otra página
-                    if (casa != null && !casa.Estado)
+
+                // ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
+
+                // Verifica si la casa existe al colocar un ID por el url
+                //if (casa == null)
+                //{
+                //    TempData["Resultado"] = "La casa no existe, por favor cree la nueva casa.";
+                //    return RedirectToAction("Index"); // Redirige a Index
+                //}
+
+                // Si la casa está inactiva, muestra un mensaje y redirige a otra página
+                if (casa != null && !casa.Estado)
                     {
                         TempData["Resultado"] = "La casa seleccionada está inactiva y no puede ser modificada.";
                         return RedirectToAction("Index"); // Redirige a Index
                     }
 
-                }
-            }
+                }           
             catch (Exception ex)
             {
                 TempData["Resultado"] = "Ocurrió un error al cargar el la casa: " + ex.Message;
