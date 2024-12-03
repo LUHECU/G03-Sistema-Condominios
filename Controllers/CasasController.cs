@@ -20,16 +20,13 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
-
-            var cobroView = new ModelCobroView();
-
+          
             var list = new List<SpConsultarCasasResult>();
             //recordar que es new nombre de la BD en SQL
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
                 list = db.SpConsultarCasas().ToList();
 
-               // cobroView.Casas = list;
             }
             //pasamos la lista a la vista
             return View(list);
@@ -61,9 +58,22 @@ namespace G03_Sistema_Condominios.Controllers
                         Estado = (bool)x.Estado
                     }).FirstOrDefault();
 
-                    //puede que sea necesario modificar este sp o bien crear el correspondiente para tener acceso a las personas
-                    ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
+                    if (Session["UserId"] != null)
+                    {
+                        // Obtiene el ID del usuario actual
+                        var userId = int.Parse(Session["UserId"].ToString());
 
+                        // Filtra la lista de clientes activos excluyendo al usuario actual
+                        var clientesActivos = db.SpConsultarClientesActivos()
+                                                .Where(cliente => cliente.Id_persona != userId)
+                                                .ToList();
+
+                        ViewBag.Clientes = clientesActivos;
+                    }
+
+
+                   // ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
+                   
                     // Verifica si la casa existe al colocar un ID por el url
                     //if (casa == null)
                     //{
