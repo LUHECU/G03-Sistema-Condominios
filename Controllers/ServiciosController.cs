@@ -65,12 +65,12 @@ namespace G03_Sistema_Condominios.Controllers
                     ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList();
 
                     // Verifica si el servicio existe al colocar un ID en el URL
-                    if (servicio == null)
-                    {
-                        ViewBag.Resultado = "el servicio no existe, por favor cree el nuevo servicio";
-                        ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList(); // Carga nuevamente los datos de las categorías
-                        return View(servicio); // Devuelve la vista con el mensaje
-                    }
+                    //if (servicio == null)
+                    //{
+                    //    ViewBag.Resultado = "el servicio no existe, por favor cree el nuevo servicio";
+                    //    ViewBag.Categorias = db.SpConsultarCategoriasServicios().ToList(); // Carga nuevamente los datos de las categorías
+                    //    return View(servicio); // Devuelve la vista con el mensaje
+                    //}
 
                     // Si el servicio está inactivo, muestra un mensaje o redirige a otra página
                     if (servicio != null && !servicio.Estado)
@@ -166,7 +166,9 @@ namespace G03_Sistema_Condominios.Controllers
                 }
 
                 db.SpInactivarServicio(idServicio);
+                ViewBag.Resultado = "Se ha inactivado el servicio exitosamente";
             }
+            
             return RedirectToAction("Index");
         }
     }

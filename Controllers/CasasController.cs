@@ -46,6 +46,17 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+
+                    // Validar si el idCasa existe
+                    var casaExistente = db.SpConsultarCasasPorID(idCasa).FirstOrDefault();
+
+                    if (idCasa.HasValue && casaExistente == null)
+                    {
+                        // Si el idCasa no existe, redirigir al Index con un mensaje
+                        TempData["Resultado"] = "La casa que está intentando modificar no existe.";
+                        return RedirectToAction("Index");
+                    }
+
                     casa = db.SpConsultarCasasPorID(idCasa).Select(x => new ModelCasa
                     {
                         IdCasa = x.Id_casa,
@@ -76,13 +87,6 @@ namespace G03_Sistema_Condominios.Controllers
 
 
                 // ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
-
-                // Verifica si la casa existe al colocar un ID por el url
-                //if (casa == null)
-                //{
-                //    TempData["Resultado"] = "La casa no existe, por favor cree la nueva casa.";
-                //    return RedirectToAction("Index"); // Redirige a Index
-                //}
 
                 // Si la casa está inactiva, muestra un mensaje y redirige a otra página
                 if (casa != null && !casa.Estado)
@@ -155,6 +159,8 @@ namespace G03_Sistema_Condominios.Controllers
 
         public ActionResult InactivarCasa(int? idCasa)
         {
+            try
+            { 
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
                 //verificar el estado de la casa 
@@ -169,7 +175,14 @@ namespace G03_Sistema_Condominios.Controllers
                 db.SpInactivarCasa(idCasa);
             }
 
+            TempData["Resultado"] = "La casa ha sido inactivada correctamente.";
             return RedirectToAction("Index");
+            }
+            catch
+            {
+                TempData["Resultado"] = "Error al inactivar la casa";
+                return RedirectToAction("Index");
+            }
 
         }
     }
