@@ -273,6 +273,25 @@ namespace DataModels
 
 		#endregion
 
+		#region SpAgregarBitacora
+
+		public static int SpAgregarBitacora(this PviProyectoFinalDB dataConnection, int? @idCobro, int? @idPersona, string @detalle)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@idCobro",   @idCobro,   LinqToDB.DataType.Int32),
+				new DataParameter("@idPersona", @idPersona, LinqToDB.DataType.Int32),
+				new DataParameter("@detalle",   @detalle,   LinqToDB.DataType.VarChar)
+				{
+					Size = 255
+				}
+			};
+
+			return dataConnection.ExecuteProc("[dbo].[SpAgregarBitacora]", parameters);
+		}
+
+		#endregion
+
 		#region SpAgregarServiciosCobro
 
 		public static int SpAgregarServiciosCobro(this PviProyectoFinalDB dataConnection, int? @idServicio, int? @idCobro)
@@ -325,9 +344,10 @@ namespace DataModels
 
 		public partial class SpConsultarBitacoraResult
 		{
-			[Column("fecha")  ] public DateTime Fecha   { get; set; }
-			[Column("detalle")] public string   Detalle { get; set; }
-			                    public string   Usuario { get; set; }
+			[Column("fecha")     ] public DateTime Fecha      { get; set; }
+			[Column("detalle")   ] public string   Detalle    { get; set; }
+			[Column("id_persona")] public int      Id_persona { get; set; }
+			                       public string   Usuario    { get; set; }
 		}
 
 		#endregion
@@ -433,6 +453,7 @@ namespace DataModels
 			[Column("id_cobro")    ] public int       Id_cobro     { get; set; }
 			[Column("id_casa")     ] public int       Id_casa      { get; set; }
 			[Column("nombre_casa") ] public string    Nombre_casa  { get; set; }
+			                         public decimal   PrecioCasa   { get; set; }
 			[Column("id_persona")  ] public int       Id_persona   { get; set; }
 			                         public string    Persona      { get; set; }
 			[Column("mes")         ] public int       Mes          { get; set; }

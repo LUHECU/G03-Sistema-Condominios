@@ -50,9 +50,9 @@ namespace G03_Sistema_Condominios.Controllers
                     }
                     
                 }
-                
+
             }
-            catch{ }
+            catch{}
 
             return View(cobroView);
         }
@@ -66,10 +66,16 @@ namespace G03_Sistema_Condominios.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
+            //Variables de sesión de usuario
+            var usuarioNombre = Session["UserName"].ToString();
+            var usuarioTipo = Session["UserTipo"].ToString();
+            var usuarioId = (int)Session["UserId"];
+
             var cobro = new ModelCobro();
             var servicios = new List<SpConsultarServiciosResult>();
             var detalleCobro = new List<SpConsultarDetallePorIdCobroResult>();
             var cobroView = new ModelCobroView();
+            var bitacora = new List<SpConsultarBitacoraResult>();
 
             using (var db = new PviProyectoFinalDB("MyDatabase"))
             {
@@ -79,11 +85,21 @@ namespace G03_Sistema_Condominios.Controllers
                     IdCobro = _.Id_cobro,
                     Persona = _.Persona,
                     NumCasa = _.Nombre_casa,
+                    PrecioCasa = _.PrecioCasa,
                     monto = _.Monto,
                     mes = _.Mes,
                     anno = _.Anno,
                     estado = _.Estado
                 }).FirstOrDefault();
+
+                if(usuarioTipo.Equals("Empleado"))
+                {
+                    bitacora = db.SpConsultarBitacora(idCobro).ToList();
+                }
+                else 
+                {
+                    bitacora = db.SpConsultarBitacora(idCobro).Where(_ => _.Id_persona == usuarioId).ToList();
+                }
 
                 detalleCobro = db.SpConsultarDetallePorIdCobro(idCobro).ToList();
                 servicios = db.SpConsultarServicios().ToList();
@@ -91,6 +107,7 @@ namespace G03_Sistema_Condominios.Controllers
                 cobroView.DetalleCobro = detalleCobro;
                 cobroView.Servicios = servicios;
                 cobroView.Cobro = cobro;
+                cobroView.Bitacora = bitacora;
 
             }
             return View(cobroView);
@@ -103,6 +120,12 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
+            //Usuario
+            var usuario = new ModelUsuario();
+            usuario.Nombre = Session["UserName"].ToString();
+            usuario.Tipo = Session["UserTipo"].ToString();
+            usuario.Id = (int) Session["UserId"];
 
             var cobro = new ModelCobro();
             var servicios = new List<SpConsultarServiciosResult>();
@@ -139,6 +162,8 @@ namespace G03_Sistema_Condominios.Controllers
             }
             catch { }
 
+            cobroView.Usuario = usuario;
+
             return View(cobroView);
         }
 
@@ -156,6 +181,11 @@ namespace G03_Sistema_Condominios.Controllers
             //Se declaran variables para la inserción de servicios
             var idServicio = 0;
 
+            //Variables de sesión de usuario
+            var usuarioNombre = Session["UserName"].ToString();
+            var usuarioTipo = Session["UserTipo"].ToString();
+            var usuarioId = (int)Session["UserId"];
+
             try
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
@@ -171,24 +201,30 @@ namespace G03_Sistema_Condominios.Controllers
                         }
 
                         db.SpActualizarMontoCobro(cobro.IdCasa, 0);
-
+                        db.SpAgregarBitacora(0, usuarioId, "CREACION");
                     }
                     else
                     {
-                        db.SpRestaurarDetalleCobroPorIdCobro(cobro.IdCobro);
-
-                        foreach (var id in servicios)
+                        if(cobro.IdPersona == usuarioId || usuarioTipo.Equals("Empleado"))
                         {
-                            idServicio = int.Parse(id);
-                            db.SpAgregarServiciosCobro(idServicio, cobro.IdCobro);
+                            db.SpRestaurarDetalleCobroPorIdCobro(cobro.IdCobro);
+
+                            foreach (var id in servicios)
+                            {
+                                idServicio = int.Parse(id);
+                                db.SpAgregarServiciosCobro(idServicio, cobro.IdCobro);
+                            }
+
+                            db.SpActualizarMontoCobro(cobro.IdCasa, cobro.IdCobro);
+                            db.SpAgregarBitacora(cobro.IdCobro, usuarioId, "MODIFICACION");
                         }
 
-                        db.SpActualizarMontoCobro(cobro.IdCasa, cobro.IdCobro);
                     }
                     
                 }
+                
             }
-            catch { }
+            catch {}
 
             return Json(cobroView);
         }
@@ -196,17 +232,30 @@ namespace G03_Sistema_Condominios.Controllers
 
         public JsonResult Clientes()
         {
+
+            var usuarioNombre = Session["UserName"].ToString();
+            var usuarioTipo = Session["UserTipo"].ToString();
+            var usuarioId = (int)Session["UserId"];
             var list = new List<Dropdown>();
+
             try
             {
-                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                if (usuarioTipo.Equals("Empleado")) 
                 {
-                    list = db.SpConsultarClientesActivos().Select(_ => new Dropdown 
+                    using (var db = new PviProyectoFinalDB("MyDatabase"))
                     {
-                        Id = _.Id_persona,
-                        Nombre = _.Cliente
-                    }).ToList();
+                        list = db.SpConsultarClientesActivos().Select(_ => new Dropdown
+                        {
+                            Id = _.Id_persona,
+                            Nombre = _.Cliente
+                        }). Where(_ => _.Id != usuarioId).ToList();
+                    }
                 }
+                else 
+                {
+                    list.Add(new Dropdown { Id = usuarioId, Nombre = usuarioNombre});
+                }
+                
             }
             catch{ }
 

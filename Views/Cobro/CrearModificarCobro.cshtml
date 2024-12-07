@@ -9,25 +9,50 @@
 
 <div class="mt-4">
 
+    @if (this.Model.Cobro == null)
+    {
+        <h2>Crear cobro</h2>
+    }
+    else
+    {
+        <h2>Modificar cobro</h2>
+    }
+
+
+    <div id="MsgDialog" title="Proceso completado" class="alert-success">
+        <div>Se ha completado el proceso exitosamente</div>
+        <button id="CerrarModal" class="btn btn-success">Continuar</button>
+    </div>
+
     <form method="post" id="FormCobro">
 
-        <input type="hidden" id="IdCobro" name="IdCobro"/>
+        <input type="hidden" id="IdCobro" name="IdCobro" />
 
         <div class="mb-3">
             <label class="form-label" for="IdCliente">Cliente</label>
-            @{ 
-                if(this.Model.Cobro != null)
+            @{
+
+                if (this.Model.Cobro != null)
                 {
                     <select id="IdCliente" name="IdCliente" class="form-control" disabled></select>
                 }
-                else 
-                { 
-                    <select id="IdCliente" name="IdCliente" class="form-control">
-                        <option value="">Seleccione una opción</option>
-                    </select>
+                else
+                {
+                    if(this.Model.Usuario.Tipo.Equals("Cliente"))
+                    {
+                        <select id="IdCliente" name="IdCliente" class="form-control" disabled></select>
+                    }
+                    else 
+                    {
+                        <select id="IdCliente" name="IdCliente" class="form-control">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                    }
+                    
                 }
+
             }
-            
+
         </div>
 
         <div class="mb-3">
@@ -44,7 +69,7 @@
                     </select>
                 }
             }
-            
+
         </div>
 
         <div class="mb-3">
@@ -68,7 +93,7 @@
 
                         @foreach (var anno in this.Model.annos)
                         {
-                        <option value="@anno">@anno</option>
+                            <option value="@anno">@anno</option>
 
                         }
                     </select>
@@ -88,7 +113,8 @@
                 if (m != 0)
                 {
                     <select id="Mes" name="Mes" class="form-control" disabled>
-                        @foreach (var mes in this.Model.meses){
+                        @foreach (var mes in this.Model.meses)
+                        {
                             if (contador == m)
                             {
                                 <option value="@contador" selected>@mes</option>
@@ -116,7 +142,8 @@
 
         </div>
 
-        <div class="mb-3">
+
+        <div class="mb-3" id="cbxServicios">
             <label class="form-label" for="Servicios">Servicios</label>
 
             @{
@@ -143,7 +170,7 @@
 
                         }
 
-                        if(!validador)
+                        if (!validador)
                         {
                             <div>
                                 <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" />
@@ -157,21 +184,18 @@
                 }
             }
 
+            <label id="checkboxValidation" class="text-danger" style="font-size: 14px"></label>
+
         </div>
 
         <div>
-            
+
             <span><input type="submit" class="btn btn-primary" value="Guardar" /></span>
             <span>@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
         </div>
 
     </form>
 
-
-
-    <div class="mt-5">
-        @ViewBag.Prueba
-    </div>
 
 </div>
 
@@ -193,13 +217,10 @@
                 },
                 'Mes': {
                     required: true
-                },
-                'Servicios': {
-                    required: true
                 }
             },
              submitHandler: function (form) {
-                guardar();
+                checkboxesValidation();
             }
 
 
@@ -234,7 +255,24 @@
             $("#IdCliente").change(function () {
                 loadDropdown("/Cobro/Casas", { idCliente: $("#IdCliente").val() }, $("#IdCasa"));
             });
+
+            $("input[name='Servicios']").change(function () {
+                var checkboxValidation = document.getElementById('checkboxValidation');
+                checkboxValidation.innerHTML = "";
+            })
         };
+
+        function checkboxesValidation() {
+            var checkboxes = document.querySelectorAll('input[name="Servicios"]:checked');
+            var checkboxValidation = document.getElementById('checkboxValidation');
+
+            if (checkboxes.length >= 1) {
+                guardar();
+            } else {
+                checkboxValidation.innerHTML = "Debe seleccionar al menos un servicio";
+            }
+
+        }
 
         function obtCheckboxes() {
 
@@ -250,8 +288,7 @@
             return list;
         }
 
-        function cargar()
-        {
+        function cargar(){
             var IdCobro = @((this.Model.Cobro != null) ? this.Model.Cobro.IdCobro : 0);
             console.log(IdCobro);
 
@@ -262,34 +299,52 @@
         }
 
         function guardar() {
+                var dataCobro = {
+                    IdCobro: $("#IdCobro").val(),
+                    IdCasa: $("#IdCasa").val(),
+                    anno: $("#Anno").val(),
+                    mes: $("#Mes").val()
+                };
 
-            var dataCobro = {
-                IdCobro: $("#IdCobro").val(),
-                IdCasa: $("#IdCasa").val(),
-                anno: $("#Anno").val(),
-                mes: $("#Mes").val()
-            };
+                var dataServicios = obtCheckboxes();
 
-            var dataServicios = obtCheckboxes();
+                console.log(dataCobro);
 
-            console.log(dataCobro);
-
-            $.post("/Cobro/CrearModificarCobro", { cobro: dataCobro, servicios: dataServicios }, function (data) {
-                alert(data); location.reload();
-            });
-
+                $.post("/Cobro/CrearModificarCobro", { cobro: dataCobro, servicios: dataServicios }, function (data) {
+                    $("#MsgDialog").dialog("open");
+                });
         }
 
         $(document).ready(function () {
 
             var idCliente = @((this.Model.Cobro != null) ? this.Model.Cobro.IdPersona : 0);
             var idCasa = @((this.Model.Cobro != null) ? this.Model.Cobro.IdCasa : 0);
+            var idUsuario = @((this.Model.Usuario != null) ? this.Model.Usuario.Id : 0);
+            var tipo = "@((this.Model.Usuario != null) ? this.Model.Usuario.Tipo : string.Empty)";
 
 
-            loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"), idCliente);
+            $("#MsgDialog").dialog({
+                autoOpen: false,
+                modal: true
+            });
+
+            $("#CerrarModal").on("click", function () {
+                $("#dialog").dialog("close");
+                        location.reload();
+            });
+
+            if (tipo === "Cliente") {
+                loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"), idUsuario);
+                loadDropdown("/Cobro/Casas", { idCliente: idUsuario}, $("#IdCasa"));
+            }
+            else {
+                loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"), idCliente);
+            }
+
             if (idCasa != 0) {
                 loadDropdown("/Cobro/Casas", { idCliente: idCliente}, $("#IdCasa"), idCasa);
             }
+
             cargar();
             setChanges();
             obtCheckboxes();
