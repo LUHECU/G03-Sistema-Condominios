@@ -51,6 +51,17 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+
+                    // Validar si el idServicio existe, en caso de buscarse por el URL directamente
+                    var servicioExistente = db.SpConsultarServiciosPorID(idServicio).FirstOrDefault();
+
+                    if (idServicio.HasValue && servicioExistente == null)
+                    {
+                        // Si el idServicio no existe, redirigir al Index con un mensaje
+                        TempData["Resultado"] = "El servicio que está intentando encontrar o modificar no existe.";
+                        return RedirectToAction("Index");
+                    }
+
                     servicio = db.SpConsultarServiciosPorID(idServicio).Select(x => new ModelServicio
                     {
                         IdServicio = x.IdServicio,

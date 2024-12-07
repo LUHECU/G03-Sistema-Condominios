@@ -47,13 +47,13 @@ namespace G03_Sistema_Condominios.Controllers
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
 
-                    // Validar si el idCasa existe
+                    // Validar si el idCasa existe, en caso de que se busque por el URL directamente
                     var casaExistente = db.SpConsultarCasasPorID(idCasa).FirstOrDefault();
 
                     if (idCasa.HasValue && casaExistente == null)
                     {
                         // Si el idCasa no existe, redirigir al Index con un mensaje
-                        TempData["Resultado"] = "La casa que está intentando modificar no existe.";
+                        TempData["Resultado"] = "La casa que está intentando encontrar o modificar no existe.";
                         return RedirectToAction("Index");
                     }
 
