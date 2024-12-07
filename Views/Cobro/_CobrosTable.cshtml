@@ -1,0 +1,25 @@
+﻿@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCobrosResult>
+
+<table class="table table-hover table-bordered mt-4">
+    <thead>
+        <tr class="text-center">
+            <th># Cobro</th>
+            <th># Casa</th>
+            <th># Propietario</th>
+            <th>Periodo</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var co in Model)
+        {
+            <tr class="text-center">
+                <td>@co.Id_cobro</td>
+                <td>@co.Nombre_casa</td>
+                <td>@co.Persona</td>
+                <td>@co.Mes - @co.Anno</td>
+                <td>@co.Estado</td>
+            </tr>
+        }
+    </tbody>
+</table>

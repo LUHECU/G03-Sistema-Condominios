@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -37,6 +38,8 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 using(var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+                    list = db.SpConsultarCobros().ToList();
+                    clientes = db.SpConsultarClientesActivos().ToList();
 
                     if (tipoUsuario.Equals("Empleado"))
                     {
@@ -58,13 +61,13 @@ namespace G03_Sistema_Condominios.Controllers
         }
 
         public ActionResult DetalleCobro(int? idCobro) 
-        {
+                    {
 
             //Verificador de inicio de sesión
             if (Session["UserId"] == null)
             {
                 return RedirectToAction("Login", "Login");
-            }
+                    }
 
             //Variables de sesión de usuario
             var usuarioNombre = Session["UserName"].ToString();
@@ -78,7 +81,7 @@ namespace G03_Sistema_Condominios.Controllers
             var bitacora = new List<SpConsultarBitacoraResult>();
 
             using (var db = new PviProyectoFinalDB("MyDatabase"))
-            {
+                    {
 
                 cobro = db.SpConsultarCobroPorId(idCobro).Select(_ => new ModelCobro
                 {
@@ -95,7 +98,7 @@ namespace G03_Sistema_Condominios.Controllers
                 if(usuarioTipo.Equals("Empleado"))
                 {
                     bitacora = db.SpConsultarBitacora(idCobro).ToList();
-                }
+                    }
                 else 
                 {
                     bitacora = db.SpConsultarBitacora(idCobro).Where(_ => _.Id_persona == usuarioId).ToList();
@@ -114,7 +117,7 @@ namespace G03_Sistema_Condominios.Controllers
         }
 
         public ActionResult CrearModificarCobro(int? idCobro) 
-        {
+            {
             //Verificador de inicio de sesión
             if (Session["UserId"] == null)
             {
@@ -163,12 +166,14 @@ namespace G03_Sistema_Condominios.Controllers
             catch { }
 
             cobroView.Usuario = usuario;
-
+            
             return View(cobroView);
         }
 
+        // Acción para filtrar cobros de manera asíncrona
         [HttpPost]
         public JsonResult CrearModificarCobro(ModelCobro cobro, List<string> servicios)
+        public ActionResult FiltrarCobros(int? propietario, string estado, int? mes, int? anno)
         {
 
             //Se instacia el cobroView nuevamente
@@ -186,6 +191,7 @@ namespace G03_Sistema_Condominios.Controllers
             var usuarioTipo = Session["UserTipo"].ToString();
             var usuarioId = (int)Session["UserId"];
 
+            List<SpConsultarCobrosResult> list = new List<SpConsultarCobrosResult>();
             try
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
@@ -193,15 +199,19 @@ namespace G03_Sistema_Condominios.Controllers
                     if (cobro.IdCobro == 0)
                     {
                         db.SpCrearCobro(cobro.IdCasa, cobro.mes, cobro.anno);
+                    list = db.SpConsultarCobros().ToList();
 
                         foreach (var id in servicios)
-                        {
+                    // Aplicar filtros
+                    if (propietario.HasValue)
+                    {
                             idServicio = int.Parse(id);
                             db.SpAgregarServiciosCobro(idServicio, 0);
                         }
 
                         db.SpActualizarMontoCobro(cobro.IdCasa, 0);
                         db.SpAgregarBitacora(0, usuarioId, "CREACION");
+                        list = list.Where(c => c.Id_persona == propietario).ToList();
                     }
                     else
                     {
@@ -210,7 +220,8 @@ namespace G03_Sistema_Condominios.Controllers
                             db.SpRestaurarDetalleCobroPorIdCobro(cobro.IdCobro);
 
                             foreach (var id in servicios)
-                            {
+                    if (!string.IsNullOrEmpty(estado))
+                    {
                                 idServicio = int.Parse(id);
                                 db.SpAgregarServiciosCobro(idServicio, cobro.IdCobro);
                             }
@@ -227,7 +238,8 @@ namespace G03_Sistema_Condominios.Controllers
             catch {}
 
             return Json(cobroView);
-        }
+                        list = list.Where(c => c.Estado == estado).ToList();
+                    }
 
 
         public JsonResult Clientes()
@@ -245,22 +257,26 @@ namespace G03_Sistema_Condominios.Controllers
                     using (var db = new PviProyectoFinalDB("MyDatabase"))
                     {
                         list = db.SpConsultarClientesActivos().Select(_ => new Dropdown
-                        {
+                    if (mes.HasValue)
+                    {
                             Id = _.Id_persona,
                             Nombre = _.Cliente
                         }). Where(_ => _.Id != usuarioId).ToList();
                     }
-                }
+                        list = list.Where(c => c.Mes == mes.Value).ToList();
+                    }
                 else 
-                {
+                    if (anno.HasValue)
+                    {
                     list.Add(new Dropdown { Id = usuarioId, Nombre = usuarioNombre});
-                }
+                        list = list.Where(c => c.Anno == anno.Value).ToList();
+                    }
                 
-            }
+                }
             catch{ }
 
             return Json(list);
-        }
+            }
 
         public JsonResult Casas(int? idCliente)
         {
@@ -270,15 +286,19 @@ namespace G03_Sistema_Condominios.Controllers
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
                     list = db.SpConsultarCasasActivasPorCliente(idCliente).Select(_ => new Dropdown
-                    {
+            catch (Exception ex)
+            {
                         Id = _.Id_casa,
                         Nombre = _.Nombre_casa
                     }).ToList();
                 }
+                // Manejo de excepciones
+                return Json(new { success = false, message = ex.Message });
             }
             catch { }
 
             return Json(list);
+            return PartialView("_CobrosTable", list);
         }
 
 
