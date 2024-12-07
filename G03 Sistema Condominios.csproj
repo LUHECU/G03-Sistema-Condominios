@@ -266,7 +266,6 @@
     <Compile Include="Models\ModelCobro.cs" />
     <Compile Include="Models\ModelCobroView.cs" />
     <Compile Include="Models\ModelLogin.cs" />
-    <Compile Include="Models\ModelUsuario.cs" />
     <Compile Include="Models\PVI_ProyectoFinal1.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -16,7 +16,6 @@ namespace G03_Sistema_Condominios.Models
         public int anno { get; set; }
         public string estado { get; set; }
         public decimal monto { get; set; }
-        public decimal PrecioCasa { get; set; }
         public DateTime fechaPagada { get; set; }
     }
 }
