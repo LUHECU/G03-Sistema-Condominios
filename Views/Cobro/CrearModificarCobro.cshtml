@@ -5,6 +5,16 @@
 }
 
 
+<style>
+
+    .ui-dialog-titlebar-close {
+        display: none;
+    }
+
+    .ui-dialog-titlebar {
+        display: none;
+    }
+</style>
 
 
 <div class="mt-4">
@@ -19,9 +29,13 @@
     }
 
 
-    <div id="MsgDialog" title="Proceso completado" class="alert-success">
+    <div id="MsgDialog">
+        <h4>Proceso completado</h4>
         <div>Se ha completado el proceso exitosamente</div>
-        <button id="CerrarModal" class="btn btn-success">Continuar</button>
+        <div class="my-3">
+            <button id="CerrarModal" class="btn btn-success">Continuar</button>
+        </div>
+        
     </div>
 
     <form method="post" id="FormCobro">
@@ -38,17 +52,17 @@
                 }
                 else
                 {
-                    if(this.Model.Usuario.Tipo.Equals("Cliente"))
+                    if (this.Model.Usuario.Tipo.Equals("Cliente"))
                     {
                         <select id="IdCliente" name="IdCliente" class="form-control" disabled></select>
                     }
-                    else 
+                    else
                     {
                         <select id="IdCliente" name="IdCliente" class="form-control">
                             <option value="">Seleccione una opción</option>
                         </select>
                     }
-                    
+
                 }
 
             }
@@ -184,7 +198,7 @@
                 }
 
 
-}
+            }
 
             <label id="checkboxValidation" class="text-danger" style="font-size: 14px"></label>
 
@@ -198,7 +212,7 @@
                 <span>@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
             }
             else
-            { 
+            {
                 <span>@Html.ActionLink("Regresar", "DetalleCobro", "Cobro", new { idCobro = this.Model.Cobro.IdCobro }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
             }
 
@@ -336,12 +350,14 @@
 
             $("#MsgDialog").dialog({
                 autoOpen: false,
-                modal: true
+                modal: true,
+                width: 'auto',
+                height: 'auto'
             });
 
             $("#CerrarModal").on("click", function () {
                 $("#dialog").dialog("close");
-                location.reload();
+                location.replace("/Cobro/Index");
             });
 
             if (tipo === "Cliente") {

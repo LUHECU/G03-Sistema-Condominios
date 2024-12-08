@@ -23,7 +23,16 @@
                 </button>
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+                        @if (Session["UserTipo"].Equals("Cliente"))
+                        {
+                            <li>@Html.ActionLink("Mis cobros", "Index", "Cobro", new { area = "" }, new { @class = "nav-link" })</li>
+                        }
+                        else 
+                        { 
+                            <li>@Html.ActionLink("Gestionar cobros", "Index", "Cobro", new { area = "" }, new { @class = "nav-link" })</li>
+                        }
+                        
 
                         @if (!Session["UserTipo"].Equals("Cliente"))
                         {

@@ -5,9 +5,9 @@
 
 <h2>Gestionar Servicios</h2>
 
-<br />
-@Html.ActionLink("Crear Servicio", "CrearServicio", null, new { @class = "btn btn-primary" })
-<br />
+<div class="m-3">
+    @Html.ActionLink("Crear Servicio", "CrearServicio", null, new { @class = "btn btn-primary" })
+</div>
 
 @* TempData persiste datos entre solicitudes HTTP y se borra después de ser leído por la vista. 
    Al usarlo, el mensaje estará disponible en la nueva solicitud generada por RedirectToAction, 
