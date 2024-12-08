@@ -3,50 +3,86 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
+
     <link href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/custom-style.css" rel="stylesheet" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        .custom-navbar {
+            background-color: #025373 !important; /* Color de fondo personalizado */
+        }
+
+            .custom-navbar .nav-link {
+                color: white !important; /* Color del texto */
+            }
+
+                .custom-navbar .nav-link:hover {
+                    background-color: #037F8C !important; /* Color al pasar el mouse */
+                    color: white !important; /* Mantener texto blanco */
+                }
+
+            .custom-navbar .navbar-brand {
+                color: white !important; /* Color del logo */
+            }
+
+                .custom-navbar .navbar-brand:hover {
+                    color: #DFF6F8 !important; /* Hover del logo */
+                }
+    </style>
+
+    <title>@ViewBag.Title - Condominios360.CR</title>
+    @Styles.Render("~/Content/css")
+
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     @{
         if (Session["UserId"] != null)
         {
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-            <div class="container">
+        <nav class="navbar navbar-expand-lg custom-navbar" data-bs-theme="dark">
 
-
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+            <div class="container-fluid">
+                <a class="navbar-brand nav-pills nav-justified" href="#">Condominios 360.CR</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                        <ul class="navbar-nav me-auto">
 
-                        @if (Session["UserTipo"].Equals("Cliente"))
-                        {
-                            <li>@Html.ActionLink("Mis cobros", "Index", "Cobro", new { area = "" }, new { @class = "nav-link" })</li>
-                        }
-                        else 
-                        { 
-                            <li>@Html.ActionLink("Gestionar cobros", "Index", "Cobro", new { area = "" }, new { @class = "nav-link" })</li>
-                        }
-                        
+                            @if (Session["UserTipo"].Equals("Cliente"))
+                            {
+                                @*<li class="nav-item">@Html.ActionLink("Mis cobros", "Index", "Cobro", new { area = "" }, new { @class = "nav-link" })</li>*@
+                                @Html.Raw("<a class='nav-link active' href='/Cobro/Index'><i class=\"fas fa-dollar-sign\"></i> Mis Cobros <span class='visually-hidden'>(current)</span></a>")
+                            }
+                            else
+                            {
+                                @*<li class="nav-item">@Html.ActionLink("Gestionar cobros", "Index", "Cobro", new { area = "" }, new { @class = "nav-link" })</li>*@
+                                @Html.Raw("<a class='nav-link active' href='/Cobro/Index'><i class=\"fas fa-dollar-sign\"></i> Gestionar Cobros <span class='visually-hidden'>(current)</span></a>")
+                            }
 
-                        @if (!Session["UserTipo"].Equals("Cliente"))
-                        {
-                            <li>@Html.ActionLink("Casas", "Index", "Casas", new { area = "" }, new { @class = "nav-link" })</li>
-                            <li>@Html.ActionLink("Servicios", "Index", "Servicios", new { area = "" }, new { @class = "nav-link" })</li>
-                        }
 
-                    </ul>
+                            @if (!Session["UserTipo"].Equals("Cliente"))
+                            {
+                                <li class="nav-item">
+                                    @*@Html.ActionLink("Casas", "Index", "Casas", new { area = "" }, new { @class = "nav-link" })*@
+                                    @Html.Raw("<a class='nav-link active' href='/Casas/Index'><i class='fas fa-home'></i> Gestionar Casas <span class='visually-hidden'>(current)</span></a>")
+                                </li>
+                                <li class="nav-item">
+                                    @*@Html.ActionLink("Servicios", "Index", "Servicios", new { area = "" }, new { @class = "nav-link" })*@
+                                    @Html.Raw("<a class='nav-link active' href='/Servicios/Index'><i class=\"fas fa-tools\"></i> Gestionar Servicios<span class='visually-hidden'>(current)</span></a>")
+                                </li>
+                            }
+
+                        </ul>
 
                     <ul class="navbar-nav ">
-                        <li>
+                        <li class="nav-item">
                             <label class="nav-link">@Html.Raw(Session["UserName"])</label>
                         </li>
-                        <li>
+                        <li class="nav-item">
                             @Html.ActionLink("Cerrar Sesión", "Logout", "Login", new { }, new { @class = "btn btn-light btn-outline-black" })
                         </li>
                     </ul>
@@ -57,13 +93,59 @@
         </nav>
         }
     }
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+<div class="container body-content">
+    @RenderBody()
+    <hr />
+    <footer class="bg-body-tertiary text-center" style="padding: 5px;">
+
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+            <!-- Imagen del logo -->
+            <div>
+                <img src="~/Imagenes/logoCondominios.png" style="height: 100px;" alt="Logo Condominios360">
+            </div>
+
+            <!-- Íconos sociales y párrafo -->
+            <div style="text-align: left;">
+                <!-- Íconos sociales -->
+                <div style="display: flex; justify-content: start; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <!-- Facebook -->
+                    <a class="btn btn-primary btn-floating" style="background-color: #3b5998; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;" href="#!" role="button">
+                        <i class="fab fa-facebook-f" style="font-size: 14px;"></i>
+                    </a>
+
+                    <!-- Twitter -->
+                    <a class="btn btn-primary btn-floating" style="background-color: #55acee; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;" href="#!" role="button">
+                        <i class="fab fa-twitter" style="font-size: 14px;"></i>
+                    </a>
+
+                    <!-- Google -->
+                    <a class="btn btn-primary btn-floating" style="background-color: #dd4b39; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;" href="#!" role="button">
+                        <i class="fab fa-google" style="font-size: 14px;"></i>
+                    </a>
+
+                    <!-- Instagram -->
+                    <a class="btn btn-primary btn-floating" style="background-color: #ac2bac; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;" href="#!" role="button">
+                        <i class="fab fa-instagram" style="font-size: 14px;"></i>
+                    </a>
+
+                    <!-- Linkedin -->
+                    <a class="btn btn-primary btn-floating" style="background-color: #0082ca; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;" href="#!" role="button">
+                        <i class="fab fa-linkedin-in" style="font-size: 14px;"></i>
+                    </a>
+
+                    <!-- Github -->
+                    <a class="btn btn-primary btn-floating" style="background-color: #333333; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;" href="#!" role="button">
+                        <i class="fab fa-github" style="font-size: 14px;"></i>
+                    </a>
+                </div>
+
+                <!-- Párrafo -->
+                <p style="margin: 0;">&copy; @DateTime.Now.Year - Condominios360.CR</p>
+            </div>
+        </div>
+
+    </footer>
+</div>
 
     @Scripts.Render("~/bundles/jquery")
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"

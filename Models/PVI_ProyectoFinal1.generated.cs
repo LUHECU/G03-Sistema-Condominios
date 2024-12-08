@@ -22,8 +22,8 @@ namespace DataModels
 {
 	/// <summary>
 	/// Database       : PVI_ProyectoFinal
-	/// Data Source    : DESKTOP-GNI1454\SQLEXPRESS
-	/// Server Version : 14.00.1000
+	/// Data Source    : Camila
+	/// Server Version : 16.00.1000
 	/// </summary>
 	public partial class PviProyectoFinalDB : LinqToDB.Data.DataConnection
 	{

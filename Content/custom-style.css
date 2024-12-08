@@ -1,0 +1,16 @@
+﻿/* Archivo: custom-styles.css */
+
+.btn-primary {
+    background-color: #025E73 !important; /* Cambia al color deseado */
+    border-color: #025E73 !important; /* Cambia al color deseado */
+}
+
+    .btn-primary:hover {
+        background-color: #025F76 !important; /* Color para el hover */
+        border-color: #025F76 !important;
+    }
+
+
+body {
+
+}
