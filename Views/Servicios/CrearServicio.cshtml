@@ -1,0 +1,140 @@
+﻿@model G03_Sistema_Condominios.Models.ModelServicio
+@{
+    ViewBag.Title = "CrearServicio";
+}
+
+@if (this.Model == null)
+{
+    <h2>Crear Servicio</h2>
+}
+else
+{
+    <h2>Modificar Servicio</h2>
+}
+
+@*Que se muestre el mensaje de exito o error*@
+@*@if (this.Model != null || this.Model == null)*@
+@if (!string.IsNullOrEmpty(ViewBag.Resultado))
+{
+    <div class="alert alert-warning">
+        @ViewBag.Resultado
+    </div>
+}
+
+<br>
+
+<form method="post" id="myform">
+
+    @Html.HiddenFor(model => model.IdServicio)
+    <div class="mb-3">
+        <label class="form-label">Nombre del Servicio: </label>
+        @*@Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @readonly = (Model.IdServicio!=0) ? "readonly" : null })*@
+        @if (this.Model == null)
+        {
+            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+        }
+        else
+        {
+            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @readonly = "readonly" })
+        }
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Descripción: </label>
+        @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Precio: </label>
+        @Html.TextBoxFor(model => model.Precio, new { @class = "form-control", @name = "Precio"})
+
+        @*@Html.TextBoxFor(model => model.Precio, "{0:0.00}", new { @class = "form-control", name = "Precio", lang = "es", type = "number", step = "0.01", min = "0.01" })*@
+
+        @*@Html.TextBoxFor(model => model.Precio, new { @class = "form-control", name = "Precio", @type = "text" })*@
+
+        @*<input type="number" step="0.01" id="Precio" name="Precio" value="" class="form-control" />*@
+
+     
+    </div>
+
+
+
+    <div class="mb-3">
+        <label class="form-label">Categoría del Servicio: </label>
+        @*@Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control", @disabled = (Model.IdServicio!=0) ? "disabled" : null })*@
+        @if (this.Model == null)
+        {
+            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control" })
+        }
+        else
+        {
+            @Html.DropDownListFor(model => model.IdCategoria, new SelectList(ViewBag.Categorias, "Id_categoria", "Nombre"), "Seleccione una categoría:", new { @class = "form-control", disabled = "disabled" })
+            @Html.HiddenFor(model => model.IdCategoria)
+        }
+
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Guardar" />
+
+    @if (this.Model != null && this.Model.IdServicio != 0 && this.Model.Estado)
+    {
+        @Html.ActionLink("Inactivar", "InactivarServicio", "Servicios", new { idServicio = Model.IdServicio }, new { @class = "btn btn-danger" })
+    }
+
+    <a href="/Servicios/Index" class="btn btn-secondary">Regresar</a>
+
+</form>
+
+@*Que se muestre el mensaje de exito o error*@
+@*@if (this.Model != null || this.Model == null)*@
+@*@if (!string.IsNullOrEmpty(ViewBag.Resultado))
+{
+    <div class="alert alert-warning">
+        @ViewBag.Resultado
+    </div>
+}*@
+
+@*Llamamos al jquery validation solo para esta pagina porque solo sirve en forms*@
+@section Scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval") @*esta validación va a indicarle al usuario que cada campo es obligatorio*@
+    <script src="~/Scripts/validacionesGenericas.js"></script> @*esto le da estilos a los mensajes de las validaciones*@
+    <script type="text/javascript">
+
+        // Definir regla personalizada alphanumeric
+        $.validator.addMethod("alphanumeric", function (value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9\s]+$/.test(value);
+        }, "Solo se permiten caracteres alfanuméricos.");
+
+        // Regla personalizada para verificar solo números enteros o decimales con hasta dos dígitos
+        $.validator.addMethod("precioValido", function (value, element) {
+            return this.optional(element) || /^(\d+(\.\d{1,2})?)$/.test(value);
+        }, "El precio debe ser un número positivo con hasta 2 decimales.");
+
+        $("#myform").validate({
+            rules:
+            {
+                'Nombre': { required: true, alphanumeric: true, minlength: 1, maxlength: 250 },
+                'Descripcion': { required: true, alphanumeric: true, maxlength: 250 },
+                'Precio': { required: true, number: true, min: 1, step: 0.01 },
+                'IdCategoria': { required: true },
+            }
+           
+        });
+
+        // Reemplazar la coma por punto para decimales
+        document.querySelector("[name='Precio']").addEventListener("input", function () {
+            this.value = this.value.replace(",", ".");
+        });
+
+        // Validate price format before form submission 
+        $("#myform").on("submit", function () {
+            var precio = $("input[name='Precio']").val();
+            if (!/^\d+(\.\d{1,2})?$/.test(precio)) {
+                alert("Por favor, ingresa un valor numérico válido para el precio con hasta 2 decimales.");
+                return false;
+            }
+        });
+
+    </script>
+}

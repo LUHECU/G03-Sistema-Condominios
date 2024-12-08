@@ -1,0 +1,53 @@
+﻿@model List<DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCasasResult>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Gestionar Casas</h2>
+
+@* TempData persiste datos entre solicitudes HTTP y se borra después de ser leído por la vista.
+    Al usarlo, el mensaje estará disponible en la nueva solicitud generada por RedirectToAction,
+    garantizando que el usuario lo vea en la vista Index. *@
+@if (TempData["Resultado"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Resultado"]
+    </div>
+}
+
+<br />
+@Html.ActionLink("Crear Casa", "CrearCasa", null, new { @class = "btn btn-primary" })
+<br />
+
+<table class="table table-bordered table-bordered table-striped">
+
+    <tr>
+        <th>Nombre de la Casa</th>
+        <th>Mts. Cuadrados</th>
+        <th>Núm. Habitaciones</th>
+        <th>Núm. Baños</th>
+        <th># Propietario</th>
+        <th>Fecha Construcción</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    @*Se hace un foreach para que podamos indicar nada mas una vez los rows y estos se vayan repitiendo automaticamente*@
+    @{
+        foreach (DataModels.PviProyectoFinalDBStoredProcedures.SpConsultarCasasResult es in this.Model)
+        {
+            <tr>
+                <td>@es.Nombre_casa</td>
+                <td>@es.Metros_cuadrados</td>
+                <td>@es.Numero_habitaciones</td>
+                <td>@es.Numero_banos</td>
+                <td>@es.Propietario</td>
+                <td>@es.Fecha_construccion.ToString("dd/MM/yyyy")</td>
+                <td>@(es.Estado ?? false ? "Activo" : "Inactivo")</td> 
+                <td>
+                    @Html.ActionLink("Modificar Casa", "CrearCasa", "Casas", new { IdCasa = es.Id_casa }, new { @class = "btn btn-primary" })
+                </td>
+            </tr>
+        }
+    }
+</table>
