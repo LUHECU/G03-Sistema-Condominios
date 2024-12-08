@@ -182,7 +182,9 @@
                     }
 
                 }
-            }
+
+
+}
 
             <label id="checkboxValidation" class="text-danger" style="font-size: 14px"></label>
 
@@ -191,7 +193,15 @@
         <div>
 
             <span><input type="submit" class="btn btn-primary" value="Guardar" /></span>
-            <span>@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
+            @if (this.Model.Cobro == null)
+            {
+                <span>@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
+            }
+            else
+            { 
+                <span>@Html.ActionLink("Regresar", "DetalleCobro", "Cobro", new { idCobro = this.Model.Cobro.IdCobro }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
+            }
+
         </div>
 
     </form>
@@ -301,6 +311,7 @@
         function guardar() {
                 var dataCobro = {
                     IdCobro: $("#IdCobro").val(),
+                    IdPersona: $("#IdCliente").val(),
                     IdCasa: $("#IdCasa").val(),
                     anno: $("#Anno").val(),
                     mes: $("#Mes").val()

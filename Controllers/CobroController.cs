@@ -14,7 +14,7 @@ namespace G03_Sistema_Condominios.Controllers
     {
         // GET: Cobro
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(string propietario, string estado, int? mes, int? anno)
         {
             //Verificador de inicio de sesión
             if (Session["UserId"] == null)
@@ -27,21 +27,51 @@ namespace G03_Sistema_Condominios.Controllers
             ModelCobroView cobroView = new ModelCobroView();
             var listCobros = new List<SpConsultarCobrosResult>();
             var listCobrosCliente = new List<SpConsultarCobroPorClienteResult>();
+            var clientes = new List<Dropdown>();
 
             //Variables de sesión
             var idUsuario = (Session["UserId"] != null)? (int)Session["UserId"] : 0;
             var tipoUsuario = (Session["UserTipo"] != null)? Session["UserTipo"].ToString() : "";
             var nombreUsuario = (Session["UserName"] != null)? Session["UserName"].ToString() : "";
 
+            //Se cargan las listas de meses y años
+            cobroView.annos = new List<int>() { 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034 };
+            cobroView.meses = new List<string>() { "Enero", "Febrero", "Marzo", "Mayo", "Abril", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+
+
+
+
             try
             {
                 using(var db = new PviProyectoFinalDB("MyDatabase"))
                 {
 
+                    
+
                     if (tipoUsuario.Equals("Empleado"))
                     {
                         listCobros = db.SpConsultarCobros().ToList();
+                        clientes = db.SpConsultarClientesActivos().Select(_ => new Dropdown { Id = _.Id_persona, Nombre = _.Cliente}).ToList();
                         cobroView.CobrosList = listCobros;
+                        ViewBag.Clientes = clientes;
+
+                        // Aplicar filtros
+                        if (!string.IsNullOrEmpty(propietario))
+                        {
+                            listCobros = listCobros.Where(c => c.Persona.Contains(propietario)).ToList();
+                        }
+                        if (!string.IsNullOrEmpty(estado))
+                        {
+                            listCobros = listCobros.Where(c => c.Estado == estado).ToList();
+                        }
+                        if (mes.HasValue)
+                        {
+                            listCobros = listCobros.Where(c => c.Mes == mes.Value).ToList();
+                        }
+                        if (anno.HasValue)
+                        {
+                            listCobros = listCobros.Where(c => c.Anno == anno.Value).ToList();
+                        }
                     }
                     else 
                     {
@@ -55,6 +85,54 @@ namespace G03_Sistema_Condominios.Controllers
             catch{}
 
             return View(cobroView);
+        }
+
+        // Acción para filtrar cobros de manera asíncrona
+        [HttpPost]
+        public ActionResult FiltrarCobros(int? propietario, string estado, int? mes, int? anno)
+        {
+            List<SpConsultarCobrosResult> list = new List<SpConsultarCobrosResult>();
+            ModelCobroView cobroView = new ModelCobroView();
+
+            //Se cargan las listas de meses y años
+            cobroView.annos = new List<int>() { 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034 };
+            cobroView.meses = new List<string>() { "Enero", "Febrero", "Marzo", "Mayo", "Abril", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+
+
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    list = db.SpConsultarCobros().ToList();
+
+                    // Aplicar filtros
+                    if (propietario.HasValue)
+                    {
+                        list = list.Where(c => c.Id_persona == propietario).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(estado))
+                    {
+                        list = list.Where(c => c.Estado == estado).ToList();
+                    }
+                    if (mes.HasValue)
+                    {
+                        list = list.Where(c => c.Mes == mes.Value).ToList();
+                    }
+                    if (anno.HasValue)
+                    {
+                        list = list.Where(c => c.Anno == anno.Value).ToList();
+                    }
+
+                    cobroView.CobrosList = list;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                return Json(new { success = false, message = ex.Message });
+            }
+
+            return PartialView("CobrosTable", cobroView); ;
         }
 
         public ActionResult DetalleCobro(int? idCobro) 
@@ -228,7 +306,6 @@ namespace G03_Sistema_Condominios.Controllers
 
             return Json(cobroView);
         }
-
 
         public JsonResult Clientes()
         {

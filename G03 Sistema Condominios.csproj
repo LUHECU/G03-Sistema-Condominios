@@ -352,6 +352,7 @@
     <Content Include="Views\Cobro\CrearModificarCobro.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Cobro\DetalleCobro.cshtml" />
+    <Content Include="Views\Cobro\CobrosTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -5,61 +5,125 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Gestionar Cobros</h2>
+@if (Session["UserTipo"].Equals("Empleado"))
+{
+    <h2>Gestionar Cobros</h2>
+}
+else
+{
+    <h2>Mis Cobros</h2>
+}
+
+<div class="mt-4">
+
+    @if (Session["UserTipo"].Equals("Empleado"))
+    {
+
+        <form id="filterForm">
+
+            <div class="row">
+
+                <div class="form-group col-3">
+                    <label for="propietario" class="form-label">Propietario:</label>
+                    @if (ViewBag.Clientes != null)
+                    {
+                        <select id="estado" name="propietario" class="form-control">
+                            <option value="">Seleccione un cliente</option>
+                            @foreach (var cliente in ViewBag.Clientes)
+                            {
+                                <option value="@cliente.Id">@cliente.Nombre</option>
+                            }
+                        </select>
+                    }
+                </div>
+
+                <div class="form-group col-3">
+                    <label for="estado" class="form-label">Estado:</label>
+                    @*<input type="text" id="estado" name="estado" class="form-control" />*@
+                    <select id="estado" name="estado" class="form-control">
+                        <option value="">Seleccione un estado</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Pagado">Pagado</option>
+                        <option value="Eliminado">Eliminado</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-2">
+                    <label for="mes" class="form-label">Mes:</label>
+                    @{
+                        var contador = 1;
+                        var m = (this.Model.Cobro != null) ? this.Model.Cobro.mes : 0;
+
+                        <select id="mes" name="mes" class="form-control">
+                            <option value="">Seleccione un mes</option>
+                            @foreach (var mes in this.Model.meses)
+                            {
+                                <option value="@contador">@mes</option>
+
+                                contador = contador + 1;
+                            }
+                        </select>
+
+                    }
+                </div>
+
+                <div class="form-group col-2">
+                    <label for="anno" class="form-label">Año:</label>
+                    <select id="anno" name="anno" class="form-control">
+                        <option value="">Seleccione un año</option>
+
+                        @foreach (var anno in this.Model.annos)
+                        {
+                            <option value="@anno">@anno</option>
+
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group col-1">
+                    <label class="form-label">&nbsp</label>
+                    <button type="button" class="form-control btn btn-primary " onclick="filtrarCobros()">Filtrar</button>
+                </div>
+
+            </div>
 
 
-
-<div>
+        </form>
+    }
 
     <div class="my-4">
         @Html.ActionLink("Nuevo cobro", "CrearModificarCobro", "Cobro", new { }, new { @class = "btn btn-primary" })
     </div>
 
-    <table class="table table-hover table-bordered">
-        <tr class="text-center">
-            <th># Cobro</th>
-            <th># Casa</th>
-            <th># Propietario</th>
-            <th>Periodo</th>
-            <th>Estado</th>
-        </tr>
-        @{
-
-            if (Session["UserTipo"].Equals("Empleado"))
-            {
-                foreach (var co in this.Model.CobrosList)
-                {
-                    <tr class="text-center">
-                        <td>@co.Id_cobro</td>
-                        <td>@co.Nombre_casa</td>
-                        <td>@co.Persona</td>
-                        <td>@co.Mes - @co.Anno</td>
-                        <td>@co.Estado</td>
-                        <td> @Html.ActionLink("Consultar", "DetalleCobro", "Cobro", new { idCobro = co.Id_cobro }, new { @class = "btn btn-primary" })</td>
-                    </tr>
-                }
-            }
-            else
-            {
-                foreach (var co in this.Model.CobrosClienteList)
-                {
-                    <tr class="text-center">
-                        <td>@co.Id_cobro</td>
-                        <td>@co.Nombre_casa</td>
-                        <td>@co.Persona</td>
-                        <td>@co.Mes - @co.Anno</td>
-                        <td>@co.Estado</td>
-                        <td> @Html.ActionLink("Consultar", "DetalleCobro", "Cobro", new { idCobro = co.Id_cobro }, new { @class = "btn btn-primary" })</td>
-                    </tr>
-                }
-            }
-
-
-
-
-
-        }
-    </table>
+    <div class="col-md-9 w-100">
+        <div id="CobrosTable">
+            @Html.Partial("CobrosTable", Model)
+        </div>
+    </div>
 
 
 </div>
+
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        function filtrarCobros() {
+            $.ajax({
+                url: '@Url.Action("FiltrarCobros", "Cobro")',
+                type: 'POST',
+                data: $('#filterForm').serialize(),
+                success: function (result) {
+                    $('#CobrosTable').html(result);
+                    $('#estado').val("");
+                    $('#mes').val("");
+                    $('#anno').val("");
+
+                },
+                error: function (xhr, status, error) {
+                    alert('Ocurrió un error al filtrar los cobros: ' + error);
+                }
+            });
+        }
+    </script>
+}
