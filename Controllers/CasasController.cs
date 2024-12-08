@@ -23,6 +23,12 @@ namespace G03_Sistema_Condominios.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
+            //Verificador de rol de usuario
+            if (Session["UserTipo"].Equals("Cliente"))
+            {
+                return RedirectToAction("Index", "Cobro");
+            }
+
             // Acción para mostrar la lista de casas
 
             var list = new List<SpConsultarCasasResult>();
@@ -44,6 +50,12 @@ namespace G03_Sistema_Condominios.Controllers
             {
                 //si no hay un usuario con sesión activa, redirecciona al login para que ingrese credenciales
                 return RedirectToAction("Login", "Login");
+            }
+
+            //Verificador de rol de usuario
+            if (Session["UserTipo"].Equals("Cliente"))
+            {
+                return RedirectToAction("Index", "Cobro");
             }
 
             var casa = new ModelCasa();

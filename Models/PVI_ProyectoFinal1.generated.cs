@@ -22,8 +22,8 @@ namespace DataModels
 {
 	/// <summary>
 	/// Database       : PVI_ProyectoFinal
-	/// Data Source    : Camila
-	/// Server Version : 16.00.1000
+	/// Data Source    : DESKTOP-GNI1454\SQLEXPRESS
+	/// Server Version : 14.00.1000
 	/// </summary>
 	public partial class PviProyectoFinalDB : LinqToDB.Data.DataConnection
 	{
@@ -702,17 +702,16 @@ namespace DataModels
 
 		#endregion
 
-		#region SpEliminarCobroMensualidades
+		#region SpEliminarCobro
 
-		public static int SpEliminarCobroMensualidades(this PviProyectoFinalDB dataConnection, int? @idCobro, int? @idUser)
+		public static int SpEliminarCobro(this PviProyectoFinalDB dataConnection, int? @idCobro)
 		{
 			var parameters = new []
 			{
-				new DataParameter("@id_cobro", @idCobro, LinqToDB.DataType.Int32),
-				new DataParameter("@id_user",  @idUser,  LinqToDB.DataType.Int32)
+				new DataParameter("@id_cobro", @idCobro, LinqToDB.DataType.Int32)
 			};
 
-			return dataConnection.ExecuteProc("[dbo].[spEliminarCobroMensualidades]", parameters);
+			return dataConnection.ExecuteProc("[dbo].[SpEliminarCobro]", parameters);
 		}
 
 		#endregion
@@ -864,17 +863,16 @@ namespace DataModels
 
 		#endregion
 
-		#region SpPagarCobroMensualidades
+		#region SpPagarCobro
 
-		public static int SpPagarCobroMensualidades(this PviProyectoFinalDB dataConnection, int? @idCobro, int? @idUser)
+		public static int SpPagarCobro(this PviProyectoFinalDB dataConnection, int? @idCobro)
 		{
 			var parameters = new []
 			{
-				new DataParameter("@id_cobro", @idCobro, LinqToDB.DataType.Int32),
-				new DataParameter("@id_user",  @idUser,  LinqToDB.DataType.Int32)
+				new DataParameter("@id_cobro", @idCobro, LinqToDB.DataType.Int32)
 			};
 
-			return dataConnection.ExecuteProc("[dbo].[spPagarCobroMensualidades]", parameters);
+			return dataConnection.ExecuteProc("[dbo].[spPagarCobro]", parameters);
 		}
 
 		#endregion

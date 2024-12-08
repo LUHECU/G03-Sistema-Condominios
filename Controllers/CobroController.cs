@@ -75,7 +75,7 @@ namespace G03_Sistema_Condominios.Controllers
                     }
                     else 
                     {
-                        listCobrosCliente = db.SpConsultarCobroPorCliente(idUsuario).ToList();
+                        listCobrosCliente = db.SpConsultarCobroPorCliente(idUsuario).Where(_ => _.Estado != "Eliminado").ToList();
                         cobroView.CobrosClienteList = listCobrosCliente;
                     }
                     
@@ -162,6 +162,7 @@ namespace G03_Sistema_Condominios.Controllers
                 {
                     IdCobro = _.Id_cobro,
                     Persona = _.Persona,
+                    IdPersona = _.Id_persona,
                     NumCasa = _.Nombre_casa,
                     PrecioCasa = _.PrecioCasa,
                     monto = _.Monto,
@@ -170,7 +171,14 @@ namespace G03_Sistema_Condominios.Controllers
                     estado = _.Estado
                 }).FirstOrDefault();
 
-                if(usuarioTipo.Equals("Empleado"))
+                //Verifica si el cobro pertenece al usuario cliente
+                if (cobro != null && usuarioTipo.Equals("Cliente") && usuarioId != cobro.IdPersona)
+                {
+                    TempData["Resultado"] = "No puede modificar un cobro que no este a su nombre. Solicite a un empleado realizar esta acción.";
+                    return RedirectToAction("Index", "Cobro");
+                }
+
+                if (usuarioTipo.Equals("Empleado"))
                 {
                     bitacora = db.SpConsultarBitacora(idCobro).ToList();
                 }
@@ -228,6 +236,20 @@ namespace G03_Sistema_Condominios.Controllers
                         mes = _.Mes,
                         anno = _.Anno
                     }).FirstOrDefault();
+
+                    //Verifica si un empleado trata de modificar un cobro a su nombre
+                    if (cobro != null && usuario.Tipo.Equals("Empleado") && usuario.Id == cobro.IdPersona)
+                    {
+                        TempData["Resultado"] = "No puede modificar un cobro que este a su nombre. Solicite ayuda de otro empleado.";
+                        return RedirectToAction("Index", "Cobro");
+                    }
+
+                    //Verifica cliente trata de modificar un cobro
+                    if (cobro != null && usuario.Tipo.Equals("Cliente"))
+                    {
+                        TempData["Resultado"] = "Permisos insuficientes, no puede modificar cobros. Solicite ayuda a un empleado para realizar esta acción.";
+                        return RedirectToAction("Index", "Cobro");
+                    }
 
                     detalleCobro = db.SpConsultarDetallePorIdCobro(idCobro).ToList();
                     servicios = db.SpConsultarServicios().ToList();
@@ -356,6 +378,40 @@ namespace G03_Sistema_Condominios.Controllers
             catch { }
 
             return Json(list);
+        }
+
+        public JsonResult EliminarCobro(int idCobro) 
+        {
+            var resultado = string.Empty;
+            var usuarioId = (int)Session["UserId"];
+
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    db.SpEliminarCobro(idCobro);
+                    db.SpAgregarBitacora(idCobro, usuarioId, "ELIMINACION");
+                }
+            }
+            catch { }
+            return Json(resultado);
+        }
+
+        public JsonResult PagarCobro(int idCobro)
+        {
+            var resultado = string.Empty;
+            var usuarioId = (int)Session["UserId"];
+
+            try
+            {
+                using (var db = new PviProyectoFinalDB("MyDatabase"))
+                {
+                    db.SpPagarCobro(idCobro);
+                    db.SpAgregarBitacora(idCobro, usuarioId, "MODIFICACION");
+                }
+            }
+            catch { }
+            return Json(resultado);
         }
 
 

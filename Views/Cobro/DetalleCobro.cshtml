@@ -5,6 +5,19 @@
     ViewBag.Title = "DetalleCobro";
 }
 
+
+<style>
+
+    .ui-dialog-titlebar-close {
+        display: none;
+    }
+
+    .ui-dialog-titlebar{
+        display: none;
+    }
+
+</style>
+
 <h2>Detalle del cobro</h2>
 
 <div>
@@ -33,7 +46,7 @@
             <tr>
                 <td class="bg-secondary bg-opacity-25 ">Periodo</td>
 
-                @{ 
+                @{
                     var mes = string.Empty;
 
                     switch (this.Model.Cobro.mes)
@@ -102,7 +115,7 @@
                             if (detalleCobro.Id_servicio == servicio.Id_servicio)
                             {
                                 <div>
-                                    <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" checked disabled/>
+                                    <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" checked disabled />
                                     <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
                                 </div>
 
@@ -115,7 +128,7 @@
                     if (!validador)
                     {
                         <div>
-                            <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" disabled/>
+                            <input type="checkbox" id="@servicio.Id_servicio" name="Servicios" value="@servicio.Id_servicio" disabled />
                             <label for="@servicio.Id_servicio">@servicio.NombreCategoria : @servicio.Nombre</label>
                         </div>
                     }
@@ -124,15 +137,29 @@
                 }
 
             }
-        }
+
+
+}
 
     </div>
 
     <div>
-        <span>@Html.ActionLink("Editar", "CrearModificarCobro", "Cobro", new { idCobro = this.Model.Cobro.IdCobro }, new { @class = "btn btn-primary" })</span>
-        <span>@Html.ActionLink("Pagar", "", "", new { }, new { @class = "btn btn-success" })</span>
-        <span>@Html.ActionLink("Eliminar", "", "", new { }, new { @class = "btn btn-danger" })</span>
-        <span class="mx-3">@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
+        @if (Session["UserTipo"].Equals("Empleado") && this.Model.Cobro.IdPersona != (int)Session["UserId"] && this.Model.Cobro.estado.Equals("Pendiente"))
+        {
+            <span>@Html.ActionLink("Editar", "CrearModificarCobro", "Cobro", new { idCobro = this.Model.Cobro.IdCobro }, new { @class = "btn btn-primary" })</span>
+        }
+
+        @if (this.Model.Cobro.estado.Equals("Pendiente"))
+        {
+            <input type="button" id="btnPagar" name="btnPagar" class="btn btn-success" value="Pagar" />
+        }
+
+        @if (Session["UserTipo"].Equals("Empleado") && this.Model.Cobro.IdPersona != (int)Session["UserId"] && this.Model.Cobro.estado.Equals("Pendiente"))
+        {
+            <input type="button" id="btnEliminar" name="btnEliminar" class="btn btn-danger" value="Eliminar" />
+        }
+
+        <span>@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
     </div>
 
     <div class="mt-3">
@@ -145,7 +172,7 @@
                 <th>Realizado por</th>
             </tr>
 
-            @foreach(var bitacora in this.Model.Bitacora)
+            @foreach (var bitacora in this.Model.Bitacora)
             {
                 <tr>
                     <td>@bitacora.Fecha</td>
@@ -160,4 +187,88 @@
 
 
 </div>
+
+<div id="MsgDialogPago" title="Pagar cobro">
+    <div class="m-3" >
+        <h4>¿Desea realizar el pago del cobro?</h4>
+        <div class="mt-4">
+            <button id="btnConfirmarPago" class="btn btn-success">Confirmar</button>
+            <button id="btnRegresarPago" class="btn btn-light btn-outline-secondary">Cancelar</button>
+        </div>
+    </div>
+    
+</div>
+
+<div id="MsgDialogEliminacion" title="Eliminar cobro" >
+    <div class="m-3">
+        <h4>¿Desea eliminar el cobro?</h4>
+        <div class="mt-4">
+            <button id="btnConfirmarEliminacion" class="btn btn-danger">Continuar</button>
+            <button id="btnRegresarEliminacion" class="btn btn-light btn-outline-secondary">Cancelar</button>
+        </div>
+    </div>
+    
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var idCliente = @((this.Model.Cobro != null) ? this.Model.Cobro.IdPersona : 0);
+            var idCobro = @((this.Model.Cobro != null) ? this.Model.Cobro.IdCobro : 0);
+            var idUsuario = @((this.Model.Usuario != null) ? this.Model.Usuario.Id : 0);
+
+
+            $("#MsgDialogPago").dialog({
+                autoOpen: false,
+                modal: true,
+                resizable: false,
+                width: 'auto',
+                height: 'auto'
+            });
+
+            $("#MsgDialogEliminacion").dialog({
+                autoOpen: false,
+                modal: true,
+                width: 'auto',
+                height: 'auto'
+                
+            });
+
+            $("#btnPagar").on("click", function () {
+                $("#MsgDialogPago").dialog("open");
+            });
+
+            $("#btnEliminar").on("click", function () {
+                $("#MsgDialogEliminacion").dialog("open");
+            });
+
+            $("#btnRegresarPago").on("click", function () {
+                $("#MsgDialogPago").dialog("close");
+            });
+
+            $("#btnRegresarEliminacion").on("click", function () {
+                $("#MsgDialogEliminacion").dialog("close");
+            });
+
+            $("#btnConfirmarPago").on("click", function () {
+                $.post("/Cobro/PagarCobro", { idCobro: idCobro }, function () {
+                    $("#dialog").dialog("close");
+                    location.reload();
+                });
+            });
+
+            $("#btnConfirmarEliminacion").on("click", function () {
+                $.post("/Cobro/EliminarCobro", { idCobro: idCobro }, function () {
+                    $("#dialog").dialog("close");
+                    location.reload();
+                });
+            });
+
+
+        });
+    </script>
+}
 

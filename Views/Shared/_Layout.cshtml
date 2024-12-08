@@ -24,8 +24,13 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Casas", "Index", "Casas", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Servicios", "Index", "Servicios", new { area = "" }, new { @class = "nav-link" })</li>
+
+                        @if (!Session["UserTipo"].Equals("Cliente"))
+                        {
+                            <li>@Html.ActionLink("Casas", "Index", "Casas", new { area = "" }, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("Servicios", "Index", "Servicios", new { area = "" }, new { @class = "nav-link" })</li>
+                        }
+
                     </ul>
 
                     <ul class="navbar-nav ">

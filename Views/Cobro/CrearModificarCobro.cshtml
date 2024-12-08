@@ -328,7 +328,7 @@
 
         $(document).ready(function () {
 
-            var idCliente = @((this.Model.Cobro != null) ? this.Model.Cobro.IdPersona : 0);
+            var idPersona = @((this.Model.Cobro != null) ? this.Model.Cobro.IdPersona : 0);
             var idCasa = @((this.Model.Cobro != null) ? this.Model.Cobro.IdCasa : 0);
             var idUsuario = @((this.Model.Usuario != null) ? this.Model.Usuario.Id : 0);
             var tipo = "@((this.Model.Usuario != null) ? this.Model.Usuario.Tipo : string.Empty)";
@@ -341,7 +341,7 @@
 
             $("#CerrarModal").on("click", function () {
                 $("#dialog").dialog("close");
-                        location.reload();
+                location.reload();
             });
 
             if (tipo === "Cliente") {
@@ -349,11 +349,11 @@
                 loadDropdown("/Cobro/Casas", { idCliente: idUsuario}, $("#IdCasa"));
             }
             else {
-                loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"), idCliente);
+                loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"), idPersona);
             }
 
             if (idCasa != 0) {
-                loadDropdown("/Cobro/Casas", { idCliente: idCliente}, $("#IdCasa"), idCasa);
+                loadDropdown("/Cobro/Casas", { idCliente: idPersona}, $("#IdCasa"), idCasa);
             }
 
             cargar();

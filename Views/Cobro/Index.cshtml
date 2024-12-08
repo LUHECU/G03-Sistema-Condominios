@@ -14,6 +14,16 @@ else
     <h2>Mis Cobros</h2>
 }
 
+@* TempData persiste datos entre solicitudes HTTP y se borra después de ser leído por la vista.
+    Al usarlo, el mensaje estará disponible en la nueva solicitud generada por RedirectToAction,
+    garantizando que el usuario lo vea en la vista Index. *@
+@if (TempData["Resultado"] != null)
+{
+    <div class="alert alert-warning my-2">
+        @TempData["Resultado"]
+    </div>
+}
+
 <div class="mt-4">
 
     @if (Session["UserTipo"].Equals("Empleado"))
@@ -27,7 +37,7 @@ else
                     <label for="propietario" class="form-label">Propietario:</label>
                     @if (ViewBag.Clientes != null)
                     {
-                        <select id="estado" name="propietario" class="form-control">
+                        <select id="propietario" name="propietario" class="form-control">
                             <option value="">Seleccione un cliente</option>
                             @foreach (var cliente in ViewBag.Clientes)
                             {
@@ -39,7 +49,6 @@ else
 
                 <div class="form-group col-3">
                     <label for="estado" class="form-label">Estado:</label>
-                    @*<input type="text" id="estado" name="estado" class="form-control" />*@
                     <select id="estado" name="estado" class="form-control">
                         <option value="">Seleccione un estado</option>
                         <option value="Pendiente">Pendiente</option>
@@ -115,6 +124,7 @@ else
                 data: $('#filterForm').serialize(),
                 success: function (result) {
                     $('#CobrosTable').html(result);
+                    $('#propietario').val("");
                     $('#estado').val("");
                     $('#mes').val("");
                     $('#anno').val("");

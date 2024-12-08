@@ -25,6 +25,12 @@ namespace G03_Sistema_Condominios.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
+            //Verificador de rol de usuario
+            if (Session["UserTipo"].Equals("Cliente"))
+            {
+                return RedirectToAction("Index", "Cobro");
+            }
+
             //Modelo de modelos 
             var cobroView = new ModelCobroView();
 
@@ -50,6 +56,12 @@ namespace G03_Sistema_Condominios.Controllers
             if (Session["UserId"] == null)
             {
                 return RedirectToAction("Login", "Login");
+            }
+
+            //Verificador de rol de usuario
+            if (Session["UserTipo"].Equals("Cliente"))
+            {
+                return RedirectToAction("Index", "Cobro");
             }
 
             var servicio = new ModelServicio();  
@@ -184,13 +196,25 @@ namespace G03_Sistema_Condominios.Controllers
                         ViewBag.Resultado = "El servicio ya está inactivo.";
                         return RedirectToAction("Index");
                     }
-                    // Inactiva el servicio
-                    db.SpInactivarServicio(idServicio);
-                }
 
-                //Muestre el mensaje de resultado en el Index al redirigir la página 
-                TempData["Resultado"] = "El servicio ha sido inactivada correctamente.";
-                return RedirectToAction("Index");
+                    // Verificar si el servicio tiene cobros pendientes antes de guardar
+                    var tienePendientes = db.SpVerificarPendientesServicio(servicio.IdServicio).FirstOrDefault();
+                    //Si tienependientes es igual a 1 quiere decir que hay un registro de cobro asociado
+                    if (tienePendientes != null && tienePendientes.Column1 == 1)
+                    {
+                        // Si hay cobros pendientes, se muestra un mensaje y no se realiza la operación
+                        TempData["Resultado"] = "El servicio tiene cobros pendientes y no puede ser inactivado.";
+                        return RedirectToAction("Index"); // Vuelve a la misma vista con el mensaje
+                    }
+                    else
+                    {
+                        // Inactiva el servicio
+                        db.SpInactivarServicio(idServicio);
+                        //Muestre el mensaje de resultado en el Index al redirigir la página
+                        TempData["Resultado"] = "El servicio ha sido inactivada correctamente.";
+                        return RedirectToAction("Index");
+                    }
+                }
             }
             catch
             {

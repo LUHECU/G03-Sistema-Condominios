@@ -256,16 +256,20 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CasasController.cs" />
     <Compile Include="Controllers\CobroController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Dropdown.cs" />
+    <Compile Include="Models\ModelCasa.cs" />
     <Compile Include="Models\ModelCobro.cs" />
     <Compile Include="Models\ModelCobroView.cs" />
     <Compile Include="Models\ModelLogin.cs" />
+    <Compile Include="Models\ModelServicio.cs" />
     <Compile Include="Models\ModelUsuario.cs" />
     <Compile Include="Models\PVI_ProyectoFinal1.generated.cs">
       <AutoGen>True</AutoGen>
@@ -353,6 +357,10 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Cobro\DetalleCobro.cshtml" />
     <Content Include="Views\Cobro\CobrosTable.cshtml" />
+    <Content Include="Views\Casas\CrearCasa.cshtml" />
+    <Content Include="Views\Casas\Index.cshtml" />
+    <Content Include="Views\Servicios\CrearServicio.cshtml" />
+    <Content Include="Views\Servicios\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
