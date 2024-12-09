@@ -75,7 +75,7 @@ namespace G03_Sistema_Condominios.Controllers
                     }
                     else 
                     {
-                        listCobrosCliente = db.SpConsultarCobroPorCliente(idUsuario).Where(_ => _.Estado != "Eliminado").ToList();
+                        listCobrosCliente = db.SpConsultarCobroPorCliente(idUsuario).ToList();
                         cobroView.CobrosClienteList = listCobrosCliente;
                     }
                     

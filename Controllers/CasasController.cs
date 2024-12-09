@@ -210,11 +210,26 @@ namespace G03_Sistema_Condominios.Controllers
                     return RedirectToAction("Index");
                 }
                     //si la casa esta activa puede ser inactivada mediante el procedimiento almacenado
-                db.SpInactivarCasa(idCasa);
+
+                    //verificar si la casa tiene servicio activos y cobros pendientes asociados 
+                    var cobrosPendientes = db.SpVerificarServiciosCobrosPendientes(idCasa).FirstOrDefault();
+
+                    if (cobrosPendientes != null && cobrosPendientes.Column1 == 1)
+                    {
+                        //Muestre el mensaje de resultado en el Index al redirigir la página 
+                        TempData["Resultado"] = "La casa tiene servicios activos y/ cobros pendientes y no puede ser inactivada.";
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        //Muestre el mensaje de resultado en el Index al redirigir la página 
+                        db.SpInactivarCasa(idCasa);
+                        TempData["Resultado"] = "La casa ha sido inactivada correctamente.";
+                        return RedirectToAction("Index");
+                    }
+                   
             }
-            //Muestre el mensaje de resultado en el Index al redirigir la página 
-            TempData["Resultado"] = "La casa ha sido inactivada correctamente.";
-            return RedirectToAction("Index");
+            
             }
             catch
             {
