@@ -48,7 +48,7 @@
 
                 @{
                     var mes = string.Empty;
-
+                    //Carga el mes según el número
                     switch (this.Model.Cobro.mes)
                     {
                         case 1:
@@ -104,14 +104,18 @@
         @{
             var validador = false;
 
+            //Muestra los servicios
             foreach (var servicio in this.Model.Servicios)
             {
+                //Solo carga los servicios activos
                 if (servicio.Estado)
                 {
+                    //Valida si se va a modificar o crear
                     if (this.Model.Cobro != null)
                     {
                         foreach (var detalleCobro in this.Model.DetalleCobro)
                         {
+                            //Selecciona los servicios asociado al cobro
                             if (detalleCobro.Id_servicio == servicio.Id_servicio)
                             {
                                 <div>
@@ -125,6 +129,7 @@
 
                     }
 
+                    //Carga los todos servicios no seleccionados
                     if (!validador)
                     {
                         <div>
@@ -144,16 +149,17 @@
     </div>
 
     <div>
+        @* Muestra el boton de editar solo si el cobro es pendiente y el usuario es empleado *@
         @if (Session["UserTipo"].Equals("Empleado") && this.Model.Cobro.IdPersona != (int)Session["UserId"] && this.Model.Cobro.estado.Equals("Pendiente"))
         {
             <span>@Html.ActionLink("Editar", "CrearModificarCobro", "Cobro", new { idCobro = this.Model.Cobro.IdCobro }, new { @class = "btn btn-primary" })</span>
         }
-
+        @* Muestra el boton de pagar solo si el cobro es pendiente *@
         @if (this.Model.Cobro.estado.Equals("Pendiente"))
         {
             <input type="button" id="btnPagar" name="btnPagar" class="btn btn-success" value="Pagar" />
         }
-
+        @* Muestra el boton de editar solo si el cobro es pendiente y el usuario es empleado *@
         @if (Session["UserTipo"].Equals("Empleado") && this.Model.Cobro.IdPersona != (int)Session["UserId"] && this.Model.Cobro.estado.Equals("Pendiente"))
         {
             <input type="button" id="btnEliminar" name="btnEliminar" class="btn btn-danger" value="Eliminar" />
@@ -220,7 +226,7 @@
             var idCobro = @((this.Model.Cobro != null) ? this.Model.Cobro.IdCobro : 0);
             var idUsuario = @((this.Model.Usuario != null) ? this.Model.Usuario.Id : 0);
 
-
+            //Carga el mensaje emergente de pago
             $("#MsgDialogPago").dialog({
                 autoOpen: false,
                 modal: true,
@@ -228,6 +234,7 @@
                 height: 'auto'
             });
 
+            //Carga el mensaje emergente de elimiación
             $("#MsgDialogEliminacion").dialog({
                 autoOpen: false,
                 modal: true,
@@ -236,22 +243,27 @@
                 
             });
 
+            //Muestra el mensaje emergente de pago
             $("#btnPagar").on("click", function () {
                 $("#MsgDialogPago").dialog("open");
             });
 
+            //Muestra el mensaje emergente de eliminar
             $("#btnEliminar").on("click", function () {
                 $("#MsgDialogEliminacion").dialog("open");
             });
 
+            //Cancela el mensaje emergente de pago
             $("#btnRegresarPago").on("click", function () {
                 $("#MsgDialogPago").dialog("close");
             });
 
+            //Cancela el mensaje emergente de eliminar
             $("#btnRegresarEliminacion").on("click", function () {
                 $("#MsgDialogEliminacion").dialog("close");
             });
 
+            //Confirma el mensaje emergente de pago
             $("#btnConfirmarPago").on("click", function () {
                 $.post("/Cobro/PagarCobro", { idCobro: idCobro }, function () {
                     $("#dialog").dialog("close");
@@ -259,6 +271,7 @@
                 });
             });
 
+            //Confirma el mensaje emergente de eliminar
             $("#btnConfirmarEliminacion").on("click", function () {
                 $.post("/Cobro/EliminarCobro", { idCobro: idCobro }, function () {
                     $("#dialog").dialog("close");

@@ -46,10 +46,11 @@ namespace G03_Sistema_Condominios.Controllers
                 using(var db = new PviProyectoFinalDB("MyDatabase"))
                 {
 
-                    
-
+                    //Verifi si el usuario es empleado
                     if (tipoUsuario.Equals("Empleado"))
                     {
+                        //Carga la vista del empleado
+
                         listCobros = db.SpConsultarCobros().ToList();
                         clientes = db.SpConsultarClientesActivos().Select(_ => new Dropdown { Id = _.Id_persona, Nombre = _.Cliente}).ToList();
                         cobroView.CobrosList = listCobros;
@@ -75,6 +76,8 @@ namespace G03_Sistema_Condominios.Controllers
                     }
                     else 
                     {
+                        //Carga la vista del cliente
+
                         listCobrosCliente = db.SpConsultarCobroPorCliente(idUsuario).ToList();
                         cobroView.CobrosClienteList = listCobrosCliente;
                     }
@@ -91,7 +94,9 @@ namespace G03_Sistema_Condominios.Controllers
         [HttpPost]
         public ActionResult FiltrarCobros(int? propietario, string estado, int? mes, int? anno)
         {
+            //Variable para almacenar listas de cobros
             List<SpConsultarCobrosResult> list = new List<SpConsultarCobrosResult>();
+            //Variable para almacenar modelos
             ModelCobroView cobroView = new ModelCobroView();
 
             //Se cargan las listas de meses y años
@@ -149,6 +154,7 @@ namespace G03_Sistema_Condominios.Controllers
             var usuarioTipo = Session["UserTipo"].ToString();
             var usuarioId = (int)Session["UserId"];
 
+            //Variables del modelos
             var cobro = new ModelCobro();
             var servicios = new List<SpConsultarServiciosResult>();
             var detalleCobro = new List<SpConsultarDetallePorIdCobroResult>();
@@ -178,6 +184,7 @@ namespace G03_Sistema_Condominios.Controllers
                     return RedirectToAction("Index", "Cobro");
                 }
 
+                //Verifica si el usuario es empleado
                 if (usuarioTipo.Equals("Empleado"))
                 {
                     bitacora = db.SpConsultarBitacora(idCobro).ToList();
@@ -189,7 +196,8 @@ namespace G03_Sistema_Condominios.Controllers
 
                 detalleCobro = db.SpConsultarDetallePorIdCobro(idCobro).ToList();
                 servicios = db.SpConsultarServicios().ToList();
-
+                
+                //Se almacenan los modelos en un único modelo
                 cobroView.DetalleCobro = detalleCobro;
                 cobroView.Servicios = servicios;
                 cobroView.Cobro = cobro;
@@ -213,6 +221,7 @@ namespace G03_Sistema_Condominios.Controllers
             usuario.Tipo = Session["UserTipo"].ToString();
             usuario.Id = (int) Session["UserId"];
 
+            //Variables de modelos
             var cobro = new ModelCobro();
             var servicios = new List<SpConsultarServiciosResult>();
             var detalleCobro = new List<SpConsultarDetallePorIdCobroResult>();
@@ -269,6 +278,7 @@ namespace G03_Sistema_Condominios.Controllers
                     detalleCobro = db.SpConsultarDetallePorIdCobro(idCobro).ToList();
                     servicios = db.SpConsultarServicios().ToList();
 
+                    //Se almacenan los modelos en un único modelo
                     cobroView.DetalleCobro = detalleCobro;
                     cobroView.Servicios = servicios;
                     cobroView.Cobro = cobro;
@@ -310,39 +320,48 @@ namespace G03_Sistema_Condominios.Controllers
 
                         var cobrosPendientes = db.SpVerificarCobrosPendientePorPeriodo(cobro.IdCasa, cobro.mes, cobro.anno).FirstOrDefault();
 
-                        //Verifica si un empleado trata de modificar un cobro a su nombre
+                        //Verifica si un usuario trata de crear un cobro con una casa que tiene un periodo igual y estado pendiente
                         if (cobrosPendientes != null && cobrosPendientes.Column1 == 1)
                         {
                             TempData["Resultado"] = "No se puede crear un nuevo cobro con una casa con un cobro pendiente en el mismo periodo.";
                             return Json(1);
                         }
 
+                        //Se crea un cobro sencillo
                         db.SpCrearCobro(cobro.IdCasa, cobro.mes, cobro.anno);
 
+                        //Se asignan los servicios al cobro recien creado
                         foreach (var id in servicios)
                         {
                             idServicio = int.Parse(id);
                             db.SpAgregarServiciosCobro(idServicio, 0);
                         }
 
+                        //Actualiza el monto del cobro
                         db.SpActualizarMontoCobro(cobro.IdCasa, 0);
+
+                        //Se registra en bitacora la acción realizada
                         db.SpAgregarBitacora(0, usuarioId, "CREACION");
                     }
                     else
                     {
+                        //Se verifica si el usuario es empleado o si le pertenece el cobro
                         if(cobro.IdPersona == usuarioId || usuarioTipo.Equals("Empleado"))
                         {
-
-
+                            //Restaura los servicios asociados al cobro en nulo
                             db.SpRestaurarDetalleCobroPorIdCobro(cobro.IdCobro);
 
+                            //Se asignan los servicios al cobro recien creado
                             foreach (var id in servicios)
                             {
                                 idServicio = int.Parse(id);
                                 db.SpAgregarServiciosCobro(idServicio, cobro.IdCobro);
                             }
 
+                            //Actualiza el monto del cobro
                             db.SpActualizarMontoCobro(cobro.IdCasa, cobro.IdCobro);
+
+                            //Se registra en bitacora la acción realizada
                             db.SpAgregarBitacora(cobro.IdCobro, usuarioId, "MODIFICACION");
                         }
 
@@ -358,14 +377,17 @@ namespace G03_Sistema_Condominios.Controllers
 
         public JsonResult Clientes()
         {
-
+            //Variables de usuario
             var usuarioNombre = Session["UserName"].ToString();
             var usuarioTipo = Session["UserTipo"].ToString();
             var usuarioId = (int)Session["UserId"];
+
+            //Variable para el Dropdown
             var list = new List<Dropdown>();
 
             try
             {
+                //Verifica si el usuario es empleado para mostrar todos las personas activas
                 if (usuarioTipo.Equals("Empleado")) 
                 {
                     using (var db = new PviProyectoFinalDB("MyDatabase"))
@@ -390,6 +412,7 @@ namespace G03_Sistema_Condominios.Controllers
 
         public JsonResult Casas(int? idCliente)
         {
+            //Variable para el Dropdown
             var list = new List<Dropdown>();
             try
             {
@@ -410,13 +433,17 @@ namespace G03_Sistema_Condominios.Controllers
         public JsonResult EliminarCobro(int idCobro) 
         {
             var resultado = string.Empty;
+
+            //Variable para almacenar el usuario que realizo la acción
             var usuarioId = (int)Session["UserId"];
 
             try
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+                    //Se realiza la inactivación del cobro
                     db.SpEliminarCobro(idCobro);
+                    //Se registra en bitacora la acción realizada
                     db.SpAgregarBitacora(idCobro, usuarioId, "ELIMINACION");
                 }
             }
@@ -427,13 +454,17 @@ namespace G03_Sistema_Condominios.Controllers
         public JsonResult PagarCobro(int idCobro)
         {
             var resultado = string.Empty;
+
+            //Variable para almacenar el usuario que realizo la acción
             var usuarioId = (int)Session["UserId"];
 
             try
             {
                 using (var db = new PviProyectoFinalDB("MyDatabase"))
                 {
+                    //Se realiza el pago del cobro
                     db.SpPagarCobro(idCobro);
+                    //Se registra en bitacora la acción realizada
                     db.SpAgregarBitacora(idCobro, usuarioId, "MODIFICACION");
                 }
             }

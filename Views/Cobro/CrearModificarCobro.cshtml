@@ -19,7 +19,7 @@
 
 <div class="mt-4">
 
-    @if (this.Model.Cobro == null)
+    @if (this.Model.Cobro == null)//Perzonaliza el titulo según el rol de usuario
     {
         <h2>Crear cobro</h2>
     }
@@ -44,13 +44,14 @@
         <div class="mb-3">
             <label class="form-label" for="IdCliente">Cliente</label>
             @{
-
+                //Valida si se va a modificar o crear
                 if (this.Model.Cobro != null)
                 {
                     <select id="IdCliente" name="IdCliente" class="form-control" disabled></select>
                 }
                 else
                 {
+                    //En caso de editar, fija el usuario si es tipo cliente
                     if (this.Model.Usuario.Tipo.Equals("Cliente"))
                     {
                         <select id="IdCliente" name="IdCliente" class="form-control" disabled></select>
@@ -71,6 +72,7 @@
         <div class="mb-3">
             <label class="form-label" for="IdCasa">Casa</label>
             @{
+                //Valida si se va a modificar o crear
                 if (this.Model.Cobro != null)
                 {
                     <select id="IdCasa" name="IdCasa" class="form-control" disabled></select>
@@ -92,7 +94,7 @@
 
                 var a = (this.Model.Cobro != null) ? this.Model.Cobro.anno : 0;
 
-
+                //Valida si se va a modificar o crear
                 if (this.Model.Cobro != null)
                 {
                     <select id="Anno" name="Anno" class="form-control" disabled>
@@ -123,6 +125,7 @@
                 var contador = 1;
                 var m = (this.Model.Cobro != null) ? this.Model.Cobro.mes : 0;
 
+                //Valida si se va a modificar o crear
                 if (m != 0)
                 {
                     <select id="Mes" name="Mes" class="form-control" disabled>
@@ -162,14 +165,18 @@
             @{
                 var validador = false;
 
+                //Muestra los servicios
                 foreach (var servicio in this.Model.Servicios)
                 {
+                    //Solo carga los servicios activos
                     if (servicio.Estado)
                     {
+                        //Valida si se va a modificar o crear
                         if (this.Model.Cobro != null)
                         {
                             foreach (var detalleCobro in this.Model.DetalleCobro)
                             {
+                                //Selecciona los servicios asociado al cobro
                                 if (detalleCobro.Id_servicio == servicio.Id_servicio)
                                 {
                                     <div>
@@ -183,6 +190,7 @@
 
                         }
 
+                        //Carga los todos servicios no seleccionados
                         if (!validador)
                         {
                             <div>
@@ -206,7 +214,8 @@
         <div>
 
             <span><input type="submit" class="btn btn-primary" value="Guardar" /></span>
-            @if (this.Model.Cobro == null)
+
+            @if (this.Model.Cobro == null)//Valida si se va a modificar o crear
             {
                 <span>@Html.ActionLink("Regresar", "Index", "Cobro", new { }, new { @class = "btn btn-secundary btn-outline-dark" })</span>
             }
@@ -227,6 +236,7 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/validacionesGenericas.js"></script>
     <script type="text/javascript">
+        //Validaciones
         $("#FormCobro").validate({
             rules: {
                 'IdCliente': {
@@ -285,6 +295,7 @@
             })
         };
 
+        //Valida que haya al menos un checkbox seleccionado
         function checkboxesValidation() {
             var checkboxes = document.querySelectorAll('input[name="Servicios"]:checked');
             var checkboxValidation = document.getElementById('checkboxValidation');
@@ -297,6 +308,7 @@
 
         }
 
+        //Obtiene los id de los servicios seleccionados
         function obtCheckboxes() {
 
             var checkboxes = document.querySelectorAll('input[name="Servicios"]:checked');
@@ -311,6 +323,7 @@
             return list;
         }
 
+        //Carga el input type hidden de id cobro
         function cargar(){
             var IdCobro = @((this.Model.Cobro != null) ? this.Model.Cobro.IdCobro : 0);
             console.log(IdCobro);
@@ -321,6 +334,7 @@
 
         }
 
+        //Guarda los datos del cobro
         function guardar() {
                 var dataCobro = {
                     IdCobro: $("#IdCobro").val(),
@@ -353,7 +367,7 @@
             var idUsuario = @((this.Model.Usuario != null) ? this.Model.Usuario.Id : 0);
             var tipo = "@((this.Model.Usuario != null) ? this.Model.Usuario.Tipo : string.Empty)";
 
-
+            //Carga el mensaje emergente de que se ha realizado el proceso correctamente
             $("#MsgDialog").dialog({
                 autoOpen: false,
                 modal: true,
@@ -361,11 +375,13 @@
                 height: 'auto'
             });
 
+            //Cierra el mensaje emerjente de éxito
             $("#CerrarModal").on("click", function () {
                 $("#dialog").dialog("close");
                 location.replace("/Cobro/Index");
             });
 
+            //Carga el dropdow usuario en caso de ser cliente
             if (tipo === "Cliente") {
                 loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"), idUsuario);
                 loadDropdown("/Cobro/Casas", { idCliente: idUsuario}, $("#IdCasa"));
@@ -374,6 +390,7 @@
                 loadDropdown("/Cobro/Clientes", {}, $("#IdCliente"), idPersona);
             }
 
+            //Se el dropdown de casas en caso de modificar el cobro
             if (idCasa != 0) {
                 loadDropdown("/Cobro/Casas", { idCliente: idPersona}, $("#IdCasa"), idCasa);
             }

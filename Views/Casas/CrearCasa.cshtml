@@ -13,7 +13,7 @@ else
 }
 
 @*Que se muestre el mensaje de exito o error*@
-@*@if (this.Model != null || this.Model == null)*@
+
     @if (!string.IsNullOrEmpty(ViewBag.Resultado))
     {
         <div class="alert alert-warning">
@@ -101,7 +101,7 @@ else
     </form>
 
 
-    @*Llamamos al jquery validation solo para esta pagina porque solo sirve en forms*@
+   
     @section Scripts
     {
         @Scripts.Render("~/bundles/jqueryval") @*esta validación va a indicarle al usuario que cada campo es obligatorio*@
