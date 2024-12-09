@@ -154,7 +154,7 @@ namespace G03_Sistema_Condominios.Controllers
                         if( cobrosPendientes != null && cobrosPendientes.Column1 == 1)
                         {
                             // Si hay servicios y cobros pendientes, se muestra un mensaje y no se realiza la operación
-                            ViewBag.Resultado = "La casa tiene servicios activos y/ cobros pendientes y no puede ser modificada.";
+                            ViewBag.Resultado = "La casa tiene servicios activos y/o cobros pendientes y no puede ser modificada.";
                             ViewBag.Clientes = db.SpConsultarClientesActivos().ToList();
                             return View(casa); // Vuelve a la misma vista con el mensaje
                         }
@@ -217,7 +217,7 @@ namespace G03_Sistema_Condominios.Controllers
                     if (cobrosPendientes != null && cobrosPendientes.Column1 == 1)
                     {
                         //Muestre el mensaje de resultado en el Index al redirigir la página 
-                        TempData["Resultado"] = "La casa tiene servicios activos y/ cobros pendientes y no puede ser inactivada.";
+                        TempData["Resultado"] = "La casa tiene servicios activos y/o cobros pendientes y no puede ser inactivada.";
                         return RedirectToAction("Index");
                     }
                     else

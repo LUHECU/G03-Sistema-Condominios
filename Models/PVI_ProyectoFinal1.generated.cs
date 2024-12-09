@@ -776,6 +776,34 @@ namespace DataModels
 
 		#endregion
 
+		#region SpVerificarCobrosPendientePorPeriodo
+
+		public static IEnumerable<SpVerificarCobrosPendientePorPeriodoResult> SpVerificarCobrosPendientePorPeriodo(this PviProyectoFinalDB dataConnection, int? @idCasa, int? @mes, int? @anno)
+		{
+			var parameters = new []
+			{
+				new DataParameter("@idCasa", @idCasa, LinqToDB.DataType.Int32),
+				new DataParameter("@mes",    @mes,    LinqToDB.DataType.Int32),
+				new DataParameter("@anno",   @anno,   LinqToDB.DataType.Int32)
+			};
+
+			var ms = dataConnection.MappingSchema;
+
+			return dataConnection.QueryProc(dataReader =>
+				new SpVerificarCobrosPendientePorPeriodoResult
+				{
+					Column1 = Converter.ChangeTypeTo<int>(dataReader.GetValue(0), ms),
+				},
+				"[dbo].[SpVerificarCobrosPendientePorPeriodo]", parameters);
+		}
+
+		public partial class SpVerificarCobrosPendientePorPeriodoResult
+		{
+			[Column("")] public int Column1 { get; set; }
+		}
+
+		#endregion
+
 		#region SpVerificarPendientesServicio
 
 		public static IEnumerable<SpVerificarPendientesServicioResult> SpVerificarPendientesServicio(this PviProyectoFinalDB dataConnection, int? @idServicio)

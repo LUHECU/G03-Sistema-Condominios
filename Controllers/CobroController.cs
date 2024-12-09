@@ -220,7 +220,7 @@ namespace G03_Sistema_Condominios.Controllers
 
             //Se cargan las listas de meses y años
             cobroView.annos = new List<int>() {2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034};
-            cobroView.meses  = new List<string>() {"Enero", "Febrero", "Marzo", "Mayo", "Abril", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+            cobroView.meses  = new List<string>() {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
 
 
 
@@ -234,7 +234,8 @@ namespace G03_Sistema_Condominios.Controllers
                         IdCasa = _.Id_casa,
                         IdPersona = _.Id_persona,
                         mes = _.Mes,
-                        anno = _.Anno
+                        anno = _.Anno,
+                        estado = _.Estado
                     }).FirstOrDefault();
 
                     //Verifica si un empleado trata de modificar un cobro a su nombre
@@ -248,6 +249,20 @@ namespace G03_Sistema_Condominios.Controllers
                     if (cobro != null && usuario.Tipo.Equals("Cliente"))
                     {
                         TempData["Resultado"] = "Permisos insuficientes, no puede modificar cobros. Solicite ayuda a un empleado para realizar esta acción.";
+                        return RedirectToAction("Index", "Cobro");
+                    }
+
+                    //Verifica si se intenta modificar un cobro eliminado
+                    if (cobro != null && cobro.estado.Equals("Eliminado"))
+                    {
+                        TempData["Resultado"] = "El cobro no puede ser modificado, debido a que ha sido eliminado.";
+                        return RedirectToAction("Index", "Cobro");
+                    }
+
+                    //Verifica si se intenta modificar un cobro pagado
+                    if (cobro != null && cobro.estado.Equals("Pagado"))
+                    {
+                        TempData["Resultado"] = "El cobro no puede ser modificado, debido a que ha sido pagado.";
                         return RedirectToAction("Index", "Cobro");
                     }
 
@@ -276,7 +291,7 @@ namespace G03_Sistema_Condominios.Controllers
 
             //Se cargan las listas de meses y años
             cobroView.annos = new List<int>() { 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034 };
-            cobroView.meses = new List<string>() { "Enero", "Febrero", "Marzo", "Mayo", "Abril", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+            cobroView.meses = new List<string>() { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
 
             //Se declaran variables para la inserción de servicios
             var idServicio = 0;
@@ -292,6 +307,16 @@ namespace G03_Sistema_Condominios.Controllers
                 {
                     if (cobro.IdCobro == 0)
                     {
+
+                        var cobrosPendientes = db.SpVerificarCobrosPendientePorPeriodo(cobro.IdCasa, cobro.mes, cobro.anno).FirstOrDefault();
+
+                        //Verifica si un empleado trata de modificar un cobro a su nombre
+                        if (cobrosPendientes != null && cobrosPendientes.Column1 == 1)
+                        {
+                            TempData["Resultado"] = "No se puede crear un nuevo cobro con una casa con un cobro pendiente en el mismo periodo.";
+                            return Json(1);
+                        }
+
                         db.SpCrearCobro(cobro.IdCasa, cobro.mes, cobro.anno);
 
                         foreach (var id in servicios)
@@ -307,6 +332,8 @@ namespace G03_Sistema_Condominios.Controllers
                     {
                         if(cobro.IdPersona == usuarioId || usuarioTipo.Equals("Empleado"))
                         {
+
+
                             db.SpRestaurarDetalleCobroPorIdCobro(cobro.IdCobro);
 
                             foreach (var id in servicios)

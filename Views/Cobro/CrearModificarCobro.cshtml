@@ -28,14 +28,13 @@
         <h2>Modificar cobro</h2>
     }
 
-
     <div id="MsgDialog">
         <h4>Proceso completado</h4>
         <div>Se ha completado el proceso exitosamente</div>
         <div class="my-3">
             <button id="CerrarModal" class="btn btn-success">Continuar</button>
         </div>
-        
+
     </div>
 
     <form method="post" id="FormCobro">
@@ -336,7 +335,14 @@
                 console.log(dataCobro);
 
                 $.post("/Cobro/CrearModificarCobro", { cobro: dataCobro, servicios: dataServicios }, function (data) {
-                    $("#MsgDialog").dialog("open");
+
+                    if (data === 1) {
+                        location.replace("/Cobro/Index");
+                    }
+                    else {
+                        $("#MsgDialog").dialog("open");
+                    }
+                    
                 });
         }
 
